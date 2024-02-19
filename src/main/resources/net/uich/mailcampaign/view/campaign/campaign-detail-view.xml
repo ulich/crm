@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://campaignDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="campaignDc"
+                  class="net.uich.mailcampaign.entity.Campaign">
+            <fetchPlan extends="_base">
+                <property name="scheduleItems" fetch="JOIN" fetchPlan="_base">
+                    <property name="emailTemplate" fetch="JOIN" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <loader/>
+            <collection id="scheduleItemsDc" property="scheduleItems"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="campaignDc">
+            <textField id="nameField" property="name"/>
+        </formLayout>
+        <h4 text="msg://net.uich.mailcampaign.entity/Campaign.scheduleItems"/>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button action="scheduleItemsDataGrid.create"/>
+            <button action="scheduleItemsDataGrid.edit"/>
+            <button action="scheduleItemsDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="scheduleItemsDataGrid" dataContainer="scheduleItemsDc" width="100%" minHeight="20em">
+            <actions>
+                <action id="create" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="edit" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="day"/>
+                <column property="time"/>
+                <column property="emailTemplate"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

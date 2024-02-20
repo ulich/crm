@@ -87,4 +87,12 @@ open class Lead {
     fun setGender(gender: Gender?) {
         this.gender = gender?.id
     }
+
+    fun salutation(): String {
+        return when (gender) {
+            Gender.MR.id -> "Sehr geehrter Herr ${lastName}"
+            Gender.MRS.id -> "Sehr geehrte Frau ${lastName}"
+            else -> "Sehr geehrte Damen und Herren"
+        }
+    }
 }

@@ -26,5 +26,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - run: |
-          docker build -t ulich/mailcampaign:$GITHUB_SHA ulich/mailcampaign:latest .
+          docker build -t ulich/mailcampaign:$GITHUB_SHA -t ulich/mailcampaign:latest .
           docker push ulich/mailcampaign --all-tags

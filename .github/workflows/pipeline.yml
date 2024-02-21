@@ -25,9 +25,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          context: .
-          tags: ulich/mailcampaign:latest
+      - run: |
+          docker build -t ulich/mailcampaign:$GITHUB_SHA ulich/mailcampaign:latest .
+          docker push ulich/mailcampaign --all-tags

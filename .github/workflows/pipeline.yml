@@ -18,6 +18,7 @@ jobs:
           cache: 'gradle'
 
       - run: ./gradlew clean -x test build -Pvaadin.productionMode=true
+      - run: find .
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

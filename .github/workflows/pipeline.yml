@@ -29,4 +29,5 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
+          context: .
           tags: ulich/mailcampaign:latest

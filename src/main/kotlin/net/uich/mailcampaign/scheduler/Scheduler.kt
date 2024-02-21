@@ -24,14 +24,12 @@ class Scheduler(
 
     private val log = LoggerFactory.getLogger(Scheduler::class.java)
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.SECONDS)
-    //@Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     fun processQueuedEmails() {
         emailer.processQueuedEmails()
     }
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.SECONDS)
-    //@Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
     fun schedule() {
         systemAuthenticator.withSystem(::start)
     }

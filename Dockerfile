@@ -2,7 +2,7 @@ FROM eclipse-temurin:17.0.3_7-jre
 
 WORKDIR /app
 
-COPY build/libs/mailcampaign.jar /app/mailcampaign.jar
+COPY build/libs/mailcampaign-0.0.1.jar /app/mailcampaign.jar
 
 ENV JAVA_OPTS="-XX:+UseG1GC -XX:MinRAMPercentage=60.0 -XX:MaxRAMPercentage=80.0"
 

@@ -2,11 +2,11 @@ package net.uich.mailcampaign.scheduler
 
 import io.jmix.core.DataManager
 import io.jmix.core.FetchPlan
+import io.jmix.core.FileRef
 import io.jmix.core.FileStorage
 import io.jmix.core.security.SystemAuthenticator
 import io.jmix.email.EmailInfoBuilder
 import io.jmix.email.Emailer
-import net.uich.mailcampaign.entity.EmailAttachment
 import net.uich.mailcampaign.entity.ScheduledEmail
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
@@ -56,13 +56,14 @@ class Scheduler(
         val toAddress = email.lead?.email!!
         val subject = email.emailTemplate?.subject!!
         val body = email.emailTemplate?.content!!
-        val attachments = email.emailTemplate?.attachments!!
+        val attachmentsFromTemplate = email.emailTemplate?.attachments?.map{ it.file }?.map(::toAttachment)!!
+        val customAttachments = email.customAttachments.map{ it.file }.map(::toAttachment)
 
         val finalBody = body.replace("{{salutation}}", email.lead?.salutation()!!)
 
         emailer.sendEmailAsync(EmailInfoBuilder.create(toAddress, subject, finalBody)
                 .setBodyContentType("text/html")
-                .setAttachments(attachments.map(::toAttachment))
+                .setAttachments(attachmentsFromTemplate + customAttachments)
                 .build())
 
         dataManager.save(email.apply {
@@ -70,9 +71,9 @@ class Scheduler(
         })
     }
 
-    private fun toAttachment(it: EmailAttachment): io.jmix.email.EmailAttachment {
-        val stream = fileStorage.openStream(it.file!!)
+    private fun toAttachment(file: FileRef?): io.jmix.email.EmailAttachment {
+        val stream = fileStorage.openStream(file!!)
         val fileBytes = IOUtils.toByteArray(stream)
-        return io.jmix.email.EmailAttachment(fileBytes, it.file?.fileName!!)
+        return io.jmix.email.EmailAttachment(fileBytes, file.fileName)
     }
 }

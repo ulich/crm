@@ -4,14 +4,19 @@ import io.jmix.core.DeletePolicy
 import io.jmix.core.annotation.DeletedBy
 import io.jmix.core.annotation.DeletedDate
 import io.jmix.core.entity.annotation.JmixGeneratedValue
+import io.jmix.core.entity.annotation.OnDelete
 import io.jmix.core.entity.annotation.OnDeleteInverse
+import io.jmix.core.metamodel.annotation.Composition
 import io.jmix.core.metamodel.annotation.JmixEntity
+import io.jmix.core.metamodel.annotation.JmixProperty
+import io.jmix.data.impl.lazyloading.NotInstantiatedList
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -26,6 +31,11 @@ open class ScheduledEmail {
     @Column(name = "ID", nullable = false)
     @Id
     var id: UUID? = null
+
+    @OnDelete(DeletePolicy.CASCADE)
+    @Composition
+    @OneToMany(mappedBy = "scheduledEmail")
+    var customAttachments: MutableList<ScheduledEmailCustomAttachments> = NotInstantiatedList()
 
     @OnDeleteInverse(DeletePolicy.CASCADE)
     @JoinColumn(name = "LEAD_ID", nullable = false)
@@ -73,4 +83,13 @@ open class ScheduledEmail {
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
 
+    @JmixProperty
+    fun getPlannedSendDateLocal(): LocalDateTime? {
+        return plannedSendDate?.toLocalDateTime()
+    }
+
+    @JmixProperty
+    fun getSentDateLocal(): LocalDateTime? {
+        return sentDate?.toLocalDateTime()
+    }
 }

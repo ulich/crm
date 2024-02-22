@@ -7,7 +7,7 @@ on:
   pull_request: {}
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,6 +18,25 @@ jobs:
           cache: 'gradle'
 
       - run: ./gradlew clean -x test build -Pvaadin.productionMode=true
+
+      - name: archive production artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    #if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

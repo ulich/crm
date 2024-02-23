@@ -82,14 +82,4 @@ open class ScheduledEmail {
     @DeletedDate
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
-
-    @JmixProperty
-    fun getPlannedSendDateLocal(): LocalDateTime? {
-        return plannedSendDate?.toLocalDateTime()
-    }
-
-    @JmixProperty
-    fun getSentDateLocal(): LocalDateTime? {
-        return sentDate?.toLocalDateTime()
-    }
 }

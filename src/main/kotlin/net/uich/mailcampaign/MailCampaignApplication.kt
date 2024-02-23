@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Primary
 import org.springframework.context.event.EventListener
 import org.springframework.core.env.Environment
 import org.springframework.scheduling.annotation.EnableScheduling
+import java.util.*
 import javax.sql.DataSource
 
 @Push
@@ -28,6 +29,7 @@ open class MailCampaignApplication : AppShellConfigurator {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             SpringApplication.run(MailCampaignApplication::class.java, *args)
         }
     }

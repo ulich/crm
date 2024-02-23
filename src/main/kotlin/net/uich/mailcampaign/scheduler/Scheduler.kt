@@ -23,13 +23,9 @@ class Scheduler(
         private val fileStorage: FileStorage) {
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
-    fun processQueuedEmails() {
-        emailer.processQueuedEmails()
-    }
-
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     fun schedule() {
         systemAuthenticator.withSystem(::start)
+        emailer.processQueuedEmails()
     }
 
     private fun start() {

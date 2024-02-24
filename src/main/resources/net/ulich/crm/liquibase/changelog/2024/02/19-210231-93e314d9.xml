@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="crm">
+        <createTable tableName="CAMPAIGN">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CAMPAIGN"/>
+            </column>
+            <column name="NAME" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="crm">
+        <createTable tableName="EMAIL_ATTACHMENT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EMAIL_ATTACHMENT"/>
+            </column>
+            <column name="FILE_" type="CLOB"/>
+            <column name="NAME" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+            <column name="EMAIL_TEMPLATE_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="crm">
+        <createTable tableName="EMAIL_TEMPLATE">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EMAIL_TEMPLATE"/>
+            </column>
+            <column name="NAME" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SUBJECT" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTENT" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="crm">
+        <createTable tableName="LEAD_">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LEAD_"/>
+            </column>
+            <column name="GENDER" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="VARCHAR(1024)"/>
+            <column name="CAMPAIGN_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="5" author="crm">
+        <createTable tableName="SCHEDULE_ITEM">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SCHEDULE_ITEM"/>
+            </column>
+            <column name="EMAIL_TEMPLATE_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DAY_" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TIME_" type="TIME"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+            <column name="CAMPAIGN_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="6" author="crm">
+        <createIndex indexName="IDX_EMAIL_ATTACHMENT_EMAIL_TEMPLATE" tableName="EMAIL_ATTACHMENT">
+            <column name="EMAIL_TEMPLATE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="EMAIL_TEMPLATE_ID" baseTableName="EMAIL_ATTACHMENT"
+                                 constraintName="FK_EMAIL_ATTACHMENT_ON_EMAIL_TEMPLATE" referencedColumnNames="ID"
+                                 referencedTableName="EMAIL_TEMPLATE"/>
+    </changeSet>
+    <changeSet id="7" author="crm">
+        <createIndex indexName="IDX_EMAIL_SCHEDULE_EMAIL_TEMPLATE" tableName="SCHEDULE_ITEM">
+            <column name="EMAIL_TEMPLATE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="EMAIL_TEMPLATE_ID" baseTableName="SCHEDULE_ITEM"
+                                 constraintName="FK_SCHEDULE_ITEM_ON_EMAIL_TEMPLATE" referencedColumnNames="ID"
+                                 referencedTableName="EMAIL_TEMPLATE"/>
+    </changeSet>
+    <changeSet id="8" author="crm">
+        <createIndex indexName="IDX_LEAD__CAMPAIGN" tableName="LEAD_">
+            <column name="CAMPAIGN_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="CAMPAIGN_ID" baseTableName="LEAD_"
+                                 constraintName="FK_LEAD__ON_CAMPAIGN" referencedColumnNames="ID"
+                                 referencedTableName="CAMPAIGN"/>
+    </changeSet>
+    <changeSet id="9" author="crm">
+        <createIndex indexName="IDX_SCHEDULE_ITEM_CAMPAIGN" tableName="SCHEDULE_ITEM">
+            <column name="CAMPAIGN_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="CAMPAIGN_ID" baseTableName="SCHEDULE_ITEM"
+                                 constraintName="FK_SCHEDULE_ITEM_ON_CAMPAIGN" referencedColumnNames="ID"
+                                 referencedTableName="CAMPAIGN"/>
+    </changeSet>
+</databaseChangeLog>

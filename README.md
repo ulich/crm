@@ -1,3 +1,3 @@
-# mailcampaign
+# crm
 
-A mail campaign tool that sends emails to leads in configurable intervals with specialized attachments.
+A custom CRM tool that also sends emails to leads in configurable intervals with specialized attachments.

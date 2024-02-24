@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://leadDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="leadDc"
+                  class="net.ulich.crm.entity.Lead">
+            <fetchPlan extends="_base">
+                <property name="campaign" fetch="JOIN" fetchPlan="_base"/>
+                <property name="scheduledEmails" fetchPlan="_base">
+                    <property name="emailTemplate" fetch="JOIN" fetchPlan="_base"/>
+                    <property name="customAttachments" fetch="JOIN" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <loader/>
+            <collection id="scheduledEmailsDc" property="scheduledEmails"/>
+        </instance>
+        <collection class="net.ulich.crm.entity.Campaign"
+                    id="campaignsDc">
+            <fetchPlan extends="_base"/>
+            <loader id="campaignsDl">
+                <query>
+                    <![CDATA[select e from Campaign e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="leadDc">
+            <emailField id="emailField" property="email"/>
+            <select id="genderField" property="gender"/>
+            <textField id="lastNameField" property="lastName"/>
+            <entityComboBox id="campaignField" property="campaign" itemsContainer="campaignsDc"/>
+        </formLayout>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button action="scheduledEmailsDataGrid.create"/>
+            <button action="scheduledEmailsDataGrid.edit"/>
+            <button action="scheduledEmailsDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="scheduledEmailsDataGrid" dataContainer="scheduledEmailsDc" width="100%" height="100%">
+            <actions>
+                <action id="create" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="edit" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="plannedSendDate" />
+                <column property="emailTemplate.subject"/>
+                <column property="customAttachments"/>
+                <column property="sentDate"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

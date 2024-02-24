@@ -55,5 +55,5 @@ jobs:
         with:
           push: true
           context: .
-          tags: ulich/mailcampaign:latest,ulich/mailcampaign:${{ github.sha }}
+          tags: ulich/crm:latest,ulich/crm:${{ github.sha }}
           platforms: linux/amd64,linux/arm64

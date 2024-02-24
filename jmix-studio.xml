@@ -7,7 +7,33 @@
   </component>
   <component name="JmixDataStoreSettingsManager">
     <moduleSettings>
-      <entry key="net.uich.mailcampaign.main">
+      <entry key="crm.main">
+        <ModuleSettings>
+          <option name="dataStoreOptionsV2">
+            <map>
+              <entry key="main">
+                <value>
+                  <DataStoreSettingsV2 />
+                </value>
+              </entry>
+            </map>
+          </option>
+        </ModuleSettings>
+      </entry>
+      <entry key="crm.main">
+        <ModuleSettings>
+          <option name="dataStoreOptionsV2">
+            <map>
+              <entry key="main">
+                <value>
+                  <DataStoreSettingsV2 />
+                </value>
+              </entry>
+            </map>
+          </option>
+        </ModuleSettings>
+      </entry>
+      <entry key="net.ulich.crm.main">
         <ModuleSettings>
           <option name="dataStoreOptionsV2">
             <map>
@@ -31,11 +57,11 @@
     <option name="savedDbProperties">
       <list>
         <SavedDbProperties>
-          <option name="databaseName" value="mailcampaign" />
+          <option name="databaseName" value="crm" />
           <option name="dbType" value="hsqlfile" />
           <option name="dbmsVersion" />
           <option name="host" value=".jmix/hsqldb" />
-          <option name="url" value="jdbc:hsqldb:file:.jmix/hsqldb/mailcampaign" />
+          <option name="url" value="jdbc:hsqldb:file:.jmix/hsqldb/crm" />
           <option name="user" value="sa" />
         </SavedDbProperties>
       </list>

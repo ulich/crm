@@ -21,7 +21,7 @@ import javax.sql.DataSource
 
 @Push
 @Theme(value = "crm")
-@PWA(name = "Mailcampaign", shortName = "Mailcampaign")
+@PWA(name = "CRM", shortName = "CRM")
 @SpringBootApplication
 @EnableScheduling
 open class CrmApplication : AppShellConfigurator {

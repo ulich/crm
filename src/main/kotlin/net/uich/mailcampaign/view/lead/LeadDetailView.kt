@@ -1,26 +1,25 @@
 package net.uich.mailcampaign.view.lead
 
 import com.vaadin.flow.component.AbstractField
-import com.vaadin.flow.component.BlurNotifier
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.data.renderer.TextRenderer
-import net.uich.mailcampaign.view.main.MainView
 import com.vaadin.flow.router.Route
 import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
-import io.jmix.core.event.EntityChangedEvent
 import io.jmix.flowui.DialogWindows
 import io.jmix.flowui.component.combobox.EntityComboBox
-import io.jmix.flowui.component.grid.DataGrid
-import io.jmix.flowui.kit.action.ActionPerformedEvent
 import io.jmix.flowui.model.CollectionPropertyContainer
 import io.jmix.flowui.view.*
 import net.uich.mailcampaign.entity.*
-import net.uich.mailcampaign.view.scheduledemail.ScheduledEmailDetailView
+import net.uich.mailcampaign.view.main.MainView
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneId
+import java.time.*
+import java.time.temporal.TemporalAdjuster
+import java.time.temporal.TemporalAdjusters
+import java.util.*
+import java.util.function.IntFunction
+import kotlin.math.min
+
 
 @Route(value = "leads/:id", layout = MainView::class)
 @ViewController("Lead.detail")
@@ -57,11 +56,14 @@ class LeadDetailView : StandardDetailView<Lead>() {
         val lead = editedEntity
         lead.scheduledEmails.clear()
 
+        val now = ZonedDateTime.now(berlin)
+
         lead.campaign?.scheduleItems?.map{ scheduleItem ->
             val scheduled = dataManager.create(ScheduledEmail::class.java).apply {
                 this.lead = lead
                 this.emailTemplate = scheduleItem.emailTemplate
-                this.plannedSendDate = calculatePlannedSendDate(scheduleItem)
+
+                this.plannedSendDate = calculatePlannedSendDate(now, scheduleItem.day!!, scheduleItem.time)
             }
             lead.scheduledEmails.add(scheduled)
         }
@@ -69,20 +71,33 @@ class LeadDetailView : StandardDetailView<Lead>() {
         scheduledEmailsDc.setItems(lead.scheduledEmails)
     }
 
-    private fun calculatePlannedSendDate(scheduleItem: ScheduleItem): OffsetDateTime {
-        val berlin = ZoneId.of("Europe/Berlin")
+    companion object {
+        private val berlin = ZoneId.of("Europe/Berlin");
 
-        val now = LocalDateTime.now(berlin)
+        fun calculatePlannedSendDate(now: ZonedDateTime, day: Int, time: Date?): OffsetDateTime {
+            if (day < 2) {
+                return now.plusMinutes(5).toOffsetDateTime()
+            }
 
-        val day = scheduleItem.day!!
-        if (day < 2) {
-            return OffsetDateTime.now().plusMinutes(5)
+            val localTime = LocalDateTime.ofInstant(time?.toInstant(), ZoneId.systemDefault()).toLocalTime();
+
+            val date = now.with(addBusinessDays.apply(day - 1))
+            return date.toLocalDate()
+                    .atTime(localTime)
+                    .atZone(berlin)
+                    .toOffsetDateTime()
         }
 
-        val localTime = LocalDateTime.ofInstant(scheduleItem.time?.toInstant(), ZoneId.systemDefault()).toLocalTime();
-        return now.plusDays((day - 1).toLong()).toLocalDate()
-                .atTime(localTime)
-                .atZone(berlin)
-                .toOffsetDateTime()
+        var addBusinessDays: IntFunction<TemporalAdjuster> = IntFunction { days: Int ->
+            TemporalAdjusters.ofDateAdjuster { date: LocalDate ->
+                val previousOrSameMonday = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                val daysFromMonday = previousOrSameMonday.until(date).days.toDouble()
+
+                val businessDays = (days + min(daysFromMonday, 4.0)).toInt()
+                previousOrSameMonday
+                        .plusWeeks((businessDays / 5).toLong())
+                        .plusDays((businessDays % 5).toLong())
+            }
+        }
     }
 }

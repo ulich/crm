@@ -38,6 +38,8 @@
             <select id="genderField" property="gender"/>
             <textField id="lastNameField" property="lastName"/>
             <entityComboBox id="campaignField" property="campaign" itemsContainer="campaignsDc"/>
+            <textField id="phoneNumberField" property="phoneNumber"/>
+            <textField id="mobilePhoneNumberField" property="mobilePhoneNumber"/>
         </formLayout>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button action="scheduledEmailsDataGrid.create"/>
@@ -59,7 +61,7 @@
                 <action id="remove" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="plannedSendDate" />
+                <column property="plannedSendDate"/>
                 <column property="emailTemplate.subject"/>
                 <column property="customAttachments"/>
                 <column property="sentDate"/>

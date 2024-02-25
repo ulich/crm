@@ -39,6 +39,12 @@ open class Lead {
     @NotNull
     var email: String? = null
 
+    @Column(name = "PHONE_NUMBER")
+    var phoneNumber: String? = null
+
+    @Column(name = "MOBILE_PHONE_NUMBER")
+    var mobilePhoneNumber: String? = null
+
     @Column(name = "GENDER", nullable = false)
     @NotNull
     private var gender: String? = null

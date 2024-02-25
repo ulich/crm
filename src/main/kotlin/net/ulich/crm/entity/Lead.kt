@@ -30,6 +30,10 @@ open class Lead {
     @Id
     var id: UUID? = null
 
+    @Column(name = "STATUS", nullable = false)
+    @NotNull
+    private var status: String = LeadStatus.NEW.id
+
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "lead")
@@ -87,6 +91,12 @@ open class Lead {
     @DeletedDate
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
+
+    fun getStatus(): LeadStatus? = status.let { LeadStatus.fromId(it) }
+
+    fun setStatus(status: LeadStatus) {
+        this.status = status.id
+    }
 
     fun getGender(): Gender? = gender?.let { Gender.fromId(it) }
 

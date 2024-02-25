@@ -41,18 +41,11 @@ open class LoginView : StandardView(), LocaleChangeObserver {
     @ViewComponent
     private lateinit var login: JmixLoginForm
 
-    @Value("\${ui.login.defaultUsername:}")
-    private lateinit var defaultUsername: String
-
-    @Value("\${ui.login.defaultPassword:}")
-    private lateinit var defaultPassword: String
-
     private val log = LoggerFactory.getLogger(LoginView::class.java)
 
     @Subscribe
     fun onInit(event: InitEvent) {
         initLocales()
-        initDefaultCredentials()
     }
 
     protected open fun initLocales() {
@@ -63,16 +56,6 @@ open class LoginView : StandardView(), LocaleChangeObserver {
         ComponentUtils.setItemsMap(login, locales);
 
         login.selectedLocale = VaadinSession.getCurrent().locale
-    }
-
-    protected open fun initDefaultCredentials() {
-        if (defaultUsername.isNotBlank()) {
-            login.username = defaultUsername
-        }
-
-        if (defaultPassword.isNotBlank()) {
-            login.password = defaultPassword
-        }
     }
 
     @Subscribe("login")

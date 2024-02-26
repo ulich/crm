@@ -20,7 +20,7 @@
             <fetchPlan extends="_base"/>
             <loader id="campaignsDl">
                 <query>
-                    <![CDATA[select e from Campaign e]]>
+                    <![CDATA[select e from Campaign e order by e.name]]>
                 </query>
             </loader>
         </collection>

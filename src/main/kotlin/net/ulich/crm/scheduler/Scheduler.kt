@@ -2,14 +2,8 @@ package net.ulich.crm.scheduler
 
 import io.jmix.core.DataManager
 import io.jmix.core.FetchPlan
-import io.jmix.core.FileRef
-import io.jmix.core.FileStorage
 import io.jmix.core.security.SystemAuthenticator
-import io.jmix.email.EmailInfoBuilder
-import io.jmix.email.Emailer
 import net.ulich.crm.entity.ScheduledEmail
-import org.apache.commons.io.IOUtils
-import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
@@ -19,13 +13,13 @@ import java.util.concurrent.TimeUnit
 class Scheduler(
         private val dataManager: DataManager,
         private val systemAuthenticator: SystemAuthenticator,
-        private val emailer: Emailer,
-        private val fileStorage: FileStorage) {
+        private val emailService: EmailService
+) {
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     fun schedule() {
         systemAuthenticator.withSystem(::start)
-        emailer.processQueuedEmails()
+        emailService.processQueuedEmails()
     }
 
     private fun start() {
@@ -48,24 +42,14 @@ class Scheduler(
         val toAddress = email.lead?.email!!
         val subject = email.emailTemplate?.subject!!
         val body = email.emailTemplate?.content!!
-        val attachmentsFromTemplate = email.emailTemplate?.attachments?.map{ it.file }?.map(::toAttachment)!!
-        val customAttachments = email.customAttachments.map{ it.file }.map(::toAttachment)
+        val templateVariables = mapOf("salutation" to email.lead?.salutation()!!)
+        val attachmentsFromTemplate = email.emailTemplate?.attachments?.map { it.file!! }!!
+        val customAttachments = email.customAttachments.map { it.file!! }
 
-        val finalBody = body.replace("{{salutation}}", email.lead?.salutation()!!)
-
-        emailer.sendEmailAsync(EmailInfoBuilder.create(toAddress, subject, finalBody)
-                .setBodyContentType("text/html")
-                .setAttachments(attachmentsFromTemplate + customAttachments)
-                .build())
+        emailService.sendEmail(toAddress, subject, body, templateVariables, attachmentsFromTemplate + customAttachments)
 
         dataManager.save(email.apply {
             this.sentDate = OffsetDateTime.now()
         })
-    }
-
-    private fun toAttachment(file: FileRef?): io.jmix.email.EmailAttachment {
-        val stream = fileStorage.openStream(file!!)
-        val fileBytes = IOUtils.toByteArray(stream)
-        return io.jmix.email.EmailAttachment(fileBytes, file.fileName)
     }
 }

@@ -18,6 +18,7 @@
     <actions>
         <action id="saveAction" type="detail_saveClose"/>
         <action id="closeAction" type="detail_close"/>
+        <action id="sendTestMail" icon="lumo:chevron-right" text="msg://sendTestMail"/>
     </actions>
     <layout>
         <formLayout id="form" dataContainer="emailTemplateDc">
@@ -52,6 +53,7 @@
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>
             <button id="closeBtn" action="closeAction"/>
+            <button id="sendTestMailBtn" action="sendTestMail"/>
         </hbox>
     </layout>
 </view>

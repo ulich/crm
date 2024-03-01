@@ -9,8 +9,11 @@ import io.jmix.core.EntityStates
 import io.jmix.flowui.DialogWindows
 import io.jmix.flowui.component.combobox.EntityComboBox
 import io.jmix.flowui.model.CollectionPropertyContainer
+import io.jmix.flowui.model.DataContext
 import io.jmix.flowui.view.*
-import net.ulich.crm.entity.*
+import net.ulich.crm.entity.Campaign
+import net.ulich.crm.entity.Lead
+import net.ulich.crm.entity.ScheduledEmail
 import net.ulich.crm.view.main.MainView
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.*
@@ -37,6 +40,17 @@ class LeadDetailView : StandardDetailView<Lead>() {
 
     @Autowired
     private lateinit var dialogWindows: DialogWindows
+
+    @ViewComponent
+    private lateinit var campaignField: EntityComboBox<Campaign>
+
+    @ViewComponent
+    private lateinit var dataContext: DataContext
+
+    @Subscribe
+    private fun onBeforeShow(event: BeforeShowEvent) {
+        campaignField.isEnabled = entityStates.isNew(editedEntity)
+    }
 
     @Supply(to = "scheduledEmailsDataGrid.customAttachments", subject = "renderer")
     private fun scheduledEmailsDataGridCustomAttachmentsRenderer(): Renderer<ScheduledEmail> {
@@ -65,6 +79,7 @@ class LeadDetailView : StandardDetailView<Lead>() {
 
                 this.plannedSendDate = calculatePlannedSendDate(now, scheduleItem.day!!, scheduleItem.time)
             }
+            dataContext.merge(scheduled)
             lead.scheduledEmails.add(scheduled)
         }
 

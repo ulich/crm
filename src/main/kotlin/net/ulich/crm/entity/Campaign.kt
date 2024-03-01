@@ -32,6 +32,7 @@ open class Campaign {
     @NotNull
     var name: String? = null
 
+    @OrderBy("day, time ASC")
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "campaign")

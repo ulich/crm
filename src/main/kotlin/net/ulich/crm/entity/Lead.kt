@@ -34,6 +34,7 @@ open class Lead {
     @NotNull
     private var status: String = LeadStatus.NEW.id
 
+    @OrderBy("plannedSendDate ASC")
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "lead")

@@ -8,7 +8,6 @@ import io.jmix.core.entity.annotation.OnDelete
 import io.jmix.core.entity.annotation.OnDeleteInverse
 import io.jmix.core.metamodel.annotation.Composition
 import io.jmix.core.metamodel.annotation.JmixEntity
-import io.jmix.core.metamodel.annotation.JmixProperty
 import io.jmix.data.impl.lazyloading.NotInstantiatedList
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
@@ -16,7 +15,6 @@ import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.*
 

@@ -5,11 +5,7 @@
     <data>
         <instance id="scheduledEmailDc"
                   class="net.ulich.crm.entity.ScheduledEmail">
-            <fetchPlan extends="_base">
-                <property name="customAttachments" fetch="JOIN" fetchPlan="_base"/>
-            </fetchPlan>
             <loader/>
-            <collection id="customAttachmentsDc" property="customAttachments"/>
         </instance>
     </data>
     <facets>
@@ -23,30 +19,6 @@
         <formLayout id="form" dataContainer="scheduledEmailDc">
             <dateTimePicker id="plannedSendDateField" property="plannedSendDate"/>
         </formLayout>
-        <h4 text="msg://net.ulich.crm.entity/ScheduledEmail.customAttachments"/>
-        <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button action="customAttachmentsDataGrid.create"/>
-            <button action="customAttachmentsDataGrid.edit"/>
-            <button action="customAttachmentsDataGrid.remove"/>
-        </hbox>
-        <dataGrid id="customAttachmentsDataGrid" dataContainer="customAttachmentsDc" width="100%" minHeight="20em">
-            <actions>
-                <action id="create" type="list_create">
-                    <properties>
-                        <property name="openMode" value="DIALOG"/>
-                    </properties>
-                </action>
-                <action id="edit" type="list_edit">
-                    <properties>
-                        <property name="openMode" value="DIALOG"/>
-                    </properties>
-                </action>
-                <action id="remove" type="list_remove"/>
-            </actions>
-            <columns>
-                <column property="file"/>
-            </columns>
-        </dataGrid>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>
             <button id="closeBtn" action="closeAction"/>

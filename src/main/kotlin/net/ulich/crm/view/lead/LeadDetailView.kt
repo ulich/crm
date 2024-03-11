@@ -1,12 +1,9 @@
 package net.ulich.crm.view.lead
 
 import com.vaadin.flow.component.AbstractField
-import com.vaadin.flow.data.renderer.Renderer
-import com.vaadin.flow.data.renderer.TextRenderer
 import com.vaadin.flow.router.Route
 import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
-import io.jmix.flowui.DialogWindows
 import io.jmix.flowui.component.combobox.EntityComboBox
 import io.jmix.flowui.model.CollectionPropertyContainer
 import io.jmix.flowui.model.DataContext
@@ -38,9 +35,6 @@ class LeadDetailView : StandardDetailView<Lead>() {
     @Autowired
     private lateinit var entityStates: EntityStates
 
-    @Autowired
-    private lateinit var dialogWindows: DialogWindows
-
     @ViewComponent
     private lateinit var campaignField: EntityComboBox<Campaign>
 
@@ -50,11 +44,6 @@ class LeadDetailView : StandardDetailView<Lead>() {
     @Subscribe
     private fun onBeforeShow(event: BeforeShowEvent) {
         campaignField.isEnabled = entityStates.isNew(editedEntity)
-    }
-
-    @Supply(to = "scheduledEmailsDataGrid.customAttachments", subject = "renderer")
-    private fun scheduledEmailsDataGridCustomAttachmentsRenderer(): Renderer<ScheduledEmail> {
-        return TextRenderer { it.customAttachments.size.toString() }
     }
 
     @Subscribe("campaignField")
@@ -83,18 +72,18 @@ class LeadDetailView : StandardDetailView<Lead>() {
             lead.scheduledEmails.add(scheduled)
         }
 
-        scheduledEmailsDc.setItems(lead.scheduledEmails)
+        scheduledEmailsDc.setItems(lead.scheduledEmails.sortedBy { it.plannedSendDate })
     }
 
     companion object {
-        private val berlin = ZoneId.of("Europe/Berlin");
+        private val berlin = ZoneId.of("Europe/Berlin")
 
         fun calculatePlannedSendDate(now: ZonedDateTime, day: Int, time: Date?): OffsetDateTime {
             if (day < 2) {
                 return now.plusMinutes(5).toOffsetDateTime()
             }
 
-            val localTime = LocalDateTime.ofInstant(time?.toInstant(), ZoneId.systemDefault()).toLocalTime();
+            val localTime = LocalDateTime.ofInstant(time?.toInstant(), ZoneId.systemDefault()).toLocalTime()
 
             val date = now.with(addBusinessDays.apply(day - 1))
             return date.toLocalDate()

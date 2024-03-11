@@ -44,9 +44,8 @@ class Scheduler(
         val body = email.emailTemplate?.content!!
         val templateVariables = mapOf("salutation" to email.lead?.salutation()!!)
         val attachmentsFromTemplate = email.emailTemplate?.attachments?.map { it.file!! }!!
-        val customAttachments = email.customAttachments.map { it.file!! }
 
-        emailService.sendEmail(toAddress, subject, body, templateVariables, attachmentsFromTemplate + customAttachments)
+        emailService.sendEmail(toAddress, subject, body, templateVariables, attachmentsFromTemplate)
 
         dataManager.save(email.apply {
             this.sentDate = OffsetDateTime.now()

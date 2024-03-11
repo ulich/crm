@@ -9,7 +9,6 @@
                 <property name="campaign" fetch="JOIN" fetchPlan="_base"/>
                 <property name="scheduledEmails" fetchPlan="_base">
                     <property name="emailTemplate" fetch="JOIN" fetchPlan="_base"/>
-                    <property name="customAttachments" fetch="JOIN" fetchPlan="_base"/>
                 </property>
             </fetchPlan>
             <loader/>
@@ -64,7 +63,6 @@
             <columns resizable="true">
                 <column property="plannedSendDate"/>
                 <column property="emailTemplate.subject"/>
-                <column property="customAttachments"/>
                 <column property="sentDate"/>
             </columns>
         </dataGrid>

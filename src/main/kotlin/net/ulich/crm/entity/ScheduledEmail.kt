@@ -4,11 +4,8 @@ import io.jmix.core.DeletePolicy
 import io.jmix.core.annotation.DeletedBy
 import io.jmix.core.annotation.DeletedDate
 import io.jmix.core.entity.annotation.JmixGeneratedValue
-import io.jmix.core.entity.annotation.OnDelete
 import io.jmix.core.entity.annotation.OnDeleteInverse
-import io.jmix.core.metamodel.annotation.Composition
 import io.jmix.core.metamodel.annotation.JmixEntity
-import io.jmix.data.impl.lazyloading.NotInstantiatedList
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import org.springframework.data.annotation.CreatedBy
@@ -29,11 +26,6 @@ open class ScheduledEmail {
     @Column(name = "ID", nullable = false)
     @Id
     var id: UUID? = null
-
-    @OnDelete(DeletePolicy.CASCADE)
-    @Composition
-    @OneToMany(mappedBy = "scheduledEmail")
-    var customAttachments: MutableList<ScheduledEmailCustomAttachments> = NotInstantiatedList()
 
     @OnDeleteInverse(DeletePolicy.CASCADE)
     @JoinColumn(name = "LEAD_ID", nullable = false)

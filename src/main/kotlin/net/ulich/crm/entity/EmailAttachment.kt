@@ -8,6 +8,7 @@ import io.jmix.core.entity.annotation.JmixGeneratedValue
 import io.jmix.core.entity.annotation.OnDeleteInverse
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotNull
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
@@ -29,6 +30,10 @@ open class EmailAttachment {
     @Column(name = "FILE_")
     @Lob
     var file: FileRef? = null
+
+    @Column(name = "PERSONALIZED", nullable = false)
+    @NotNull
+    var personalized: Boolean? = false
 
     @CreatedBy
     @Column(name = "CREATED_BY")
@@ -62,4 +67,5 @@ open class EmailAttachment {
     @JoinColumn(name = "EMAIL_TEMPLATE_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     var emailTemplate: EmailTemplate? = null
+
 }

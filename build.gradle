@@ -41,12 +41,13 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'io.jmix.flowui:jmix-flowui-test-assist'
     implementation 'org.postgresql:postgresql'
+
+    implementation 'org.apache.pdfbox:pdfbox:3.0.1'
 }
 
 test {

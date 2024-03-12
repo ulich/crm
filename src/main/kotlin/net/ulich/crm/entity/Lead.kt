@@ -54,9 +54,27 @@ open class Lead {
     @NotNull
     private var gender: String? = null
 
+    @Column(name = "COMPANY_NAME", length = 1024)
+    var companyName: String? = null
+
+    @Column(name = "FIRST_NAME", length = 1024)
+    var firstName: String? = null
+
     @InstanceName
     @Column(name = "LAST_NAME", length = 1024)
     var lastName: String? = null
+
+    @Column(name = "STREET", length = 1024)
+    var street: String? = null
+
+    @Column(name = "POST_CODE")
+    var postCode: String? = null
+
+    @Column(name = "CITY", length = 1024)
+    var city: String? = null
+
+    @Column(name = "NOTES")
+    var notes: String? = null
 
     @OnDeleteInverse(DeletePolicy.DENY)
     @OnDelete(DeletePolicy.UNLINK)

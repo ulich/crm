@@ -41,9 +41,18 @@ class LeadDetailView : StandardDetailView<Lead>() {
     @ViewComponent
     private lateinit var dataContext: DataContext
 
+    @Autowired
+    private lateinit var leadValidator: LeadValidator
+
     @Subscribe
     private fun onBeforeShow(event: BeforeShowEvent) {
         campaignField.isEnabled = entityStates.isNew(editedEntity)
+    }
+
+    @Subscribe
+    private fun onValidation(event: ValidationEvent) {
+        val errors = leadValidator.validate(editedEntity)
+        event.addErrors(errors)
     }
 
     @Subscribe("campaignField")

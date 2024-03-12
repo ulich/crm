@@ -21,39 +21,41 @@
         <action id="sendTestMail" icon="lumo:chevron-right" text="msg://sendTestMail"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="emailTemplateDc">
-            <textField id="nameField" property="name"/>
-            <textField id="subjectField" property="subject"/>
-            <textArea id="contentField" height="9.5em" property="content" colspan="2" minHeight="400px"/>
-        </formLayout>
-        <h4 text="msg://net.ulich.crm.entity/EmailTemplate.attachments"/>
-        <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button action="attachmentsDataGrid.create"/>
-            <button action="attachmentsDataGrid.edit"/>
-            <button action="attachmentsDataGrid.remove"/>
-        </hbox>
-        <dataGrid id="attachmentsDataGrid" dataContainer="attachmentsDc" width="100%">
-            <actions>
-                <action id="create" type="list_create">
-                    <properties>
-                        <property name="openMode" value="DIALOG"/>
-                    </properties>
-                </action>
-                <action id="edit" type="list_edit">
-                    <properties>
-                        <property name="openMode" value="DIALOG"/>
-                    </properties>
-                </action>
-                <action id="remove" type="list_remove"/>
-            </actions>
-            <columns>
-                <column property="file"/>
-            </columns>
-        </dataGrid>
-        <hbox id="detailActions">
-            <button id="saveAndCloseBtn" action="saveAction"/>
-            <button id="closeBtn" action="closeAction"/>
-            <button id="sendTestMailBtn" action="sendTestMail"/>
-        </hbox>
+        <vbox>
+            <formLayout id="form" dataContainer="emailTemplateDc">
+                <textField id="nameField" property="name"/>
+                <textField id="subjectField" property="subject"/>
+                <textArea id="contentField" height="9.5em" property="content" colspan="2" minHeight="400px"/>
+            </formLayout>
+            <h4 text="msg://net.ulich.crm.entity/EmailTemplate.attachments"/>
+            <hbox id="buttonsPanel" classNames="buttons-panel">
+                <button action="attachmentsDataGrid.create"/>
+                <button action="attachmentsDataGrid.edit"/>
+                <button action="attachmentsDataGrid.remove"/>
+            </hbox>
+            <dataGrid id="attachmentsDataGrid" dataContainer="attachmentsDc" width="100%">
+                <actions>
+                    <action id="create" type="list_create">
+                        <properties>
+                            <property name="openMode" value="DIALOG"/>
+                        </properties>
+                    </action>
+                    <action id="edit" type="list_edit">
+                        <properties>
+                            <property name="openMode" value="DIALOG"/>
+                        </properties>
+                    </action>
+                    <action id="remove" type="list_remove"/>
+                </actions>
+                <columns>
+                    <column property="file"/>
+                </columns>
+            </dataGrid>
+            <hbox id="detailActions">
+                <button id="saveAndCloseBtn" action="saveAction"/>
+                <button id="closeBtn" action="closeAction"/>
+                <button id="sendTestMailBtn" action="sendTestMail"/>
+            </hbox>
+        </vbox>
     </layout>
 </view>

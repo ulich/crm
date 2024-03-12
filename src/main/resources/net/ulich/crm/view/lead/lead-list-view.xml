@@ -49,6 +49,7 @@
             </actions>
             <columns resizable="true">
                 <column property="email"/>
+                <column property="companyName"/>
                 <column property="lastName"/>
                 <column property="status"/>
                 <column property="campaign"/>

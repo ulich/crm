@@ -18,7 +18,9 @@
     </actions>
     <layout>
         <formLayout id="form" dataContainer="emailAttachmentDc">
-            <fileStorageUploadField id="fileField" property="file" maxFileSize="20971520" fileNameVisible="true"/>
+            <checkbox property="personalized"/>
+            <fileStorageUploadField id="fileField" property="file" maxFileSize="20971520" fileNameVisible="true"
+                                    colspan="2"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>

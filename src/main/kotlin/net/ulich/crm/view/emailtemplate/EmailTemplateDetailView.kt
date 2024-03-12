@@ -17,6 +17,7 @@ import net.ulich.crm.entity.EmailAttachment
 import net.ulich.crm.entity.EmailTemplate
 import net.ulich.crm.entity.User
 import net.ulich.crm.scheduler.EmailService
+import net.ulich.crm.scheduler.Personalization
 import net.ulich.crm.view.main.MainView
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -72,12 +73,20 @@ class EmailTemplateDetailView : StandardDetailView<EmailTemplate>() {
     }
 
     private fun sendMail(toAddress: String) {
-        emailService.sendEmail(
+        emailService.sendPersonalizedEmail(
             toAddress,
             editedEntity.subject!!,
             editedEntity.content!!,
-            mapOf("salutation" to "Sehr geehrter Herr Mustermann"),
-            editedEntity.attachments.map { it.file!! },
+            editedEntity.attachments,
+            Personalization(
+                salutation = "Sehr geehrter Herr Mustermann",
+                firstName = "Max",
+                lastName = "Mustermann",
+                companyName = "Musterfirma GmbH",
+                street = "Musterstraße 1",
+                postCode = "12345",
+                city = "Musterstadt"
+            )
         )
         emailService.processQueuedEmails()
 

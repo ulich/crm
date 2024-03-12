@@ -5,9 +5,6 @@
     <data>
         <collection id="emailTemplatesDc"
                     class="net.ulich.crm.entity.EmailTemplate">
-            <fetchPlan extends="_base">
-                <property name="attachments" fetch="JOIN" fetchPlan="_base"/>
-            </fetchPlan>
             <loader id="emailTemplatesDl" readOnly="true">
                 <query>
                     <![CDATA[select e from EmailTemplate e order by e.name]]>

@@ -84,6 +84,18 @@ class LeadDetailView : StandardDetailView<Lead>() {
         scheduledEmailsDc.setItems(lead.scheduledEmails.sortedBy { it.plannedSendDate })
     }
 
+    fun prefillWith(lead: Lead) {
+        editedEntity.companyName = lead.companyName
+        editedEntity.firstName = lead.firstName
+        editedEntity.lastName = lead.lastName
+        editedEntity.street = lead.street
+        editedEntity.postCode = lead.postCode
+        editedEntity.city = lead.city
+        editedEntity.email = lead.email
+        editedEntity.phoneNumber = lead.phoneNumber
+        editedEntity.notes = lead.notes
+    }
+
     companion object {
         private val berlin = ZoneId.of("Europe/Berlin")
 

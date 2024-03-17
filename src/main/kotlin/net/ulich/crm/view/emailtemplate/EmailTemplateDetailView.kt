@@ -58,10 +58,11 @@ class EmailTemplateDetailView : StandardDetailView<EmailTemplate>() {
 
     @Subscribe
     private fun onReady(event: ReadyEvent) {
-        val clazz = if (editedEntity.content?.contains("<table>") == true)
-            CodeEditor::class.java else RichTextEditor::class.java
+        val hasTable = editedEntity.content?.contains("<table>") == true
+                || editedEntity.content?.contains("<table ") == true
 
-        val contentField = uiComponents.create(clazz)
+        val fieldClass = if (hasTable) CodeEditor::class.java else RichTextEditor::class.java
+        val contentField = uiComponents.create(fieldClass)
         contentField.valueSource = ContainerValueSource(emailTemplateDc, "content")
         contentField.label = messageBundle.getMessage("content")
         form.add(contentField)

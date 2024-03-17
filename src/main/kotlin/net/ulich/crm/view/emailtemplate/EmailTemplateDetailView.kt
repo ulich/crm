@@ -77,6 +77,7 @@ class EmailTemplateDetailView : StandardDetailView<EmailTemplate>() {
             toAddress,
             editedEntity.subject!!,
             editedEntity.content!!,
+            editedEntity.signature?.content,
             editedEntity.attachments,
             Personalization(
                 salutation = "Sehr geehrter Herr Mustermann",

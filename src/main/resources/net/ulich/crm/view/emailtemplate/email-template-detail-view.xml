@@ -7,10 +7,20 @@
                   class="net.ulich.crm.entity.EmailTemplate">
             <fetchPlan extends="_base">
                 <property name="attachments" fetch="JOIN" fetchPlan="_base"/>
+                <property name="signature" fetchPlan="_base"/>
             </fetchPlan>
             <loader/>
             <collection id="attachmentsDc" property="attachments"/>
         </instance>
+        <collection class="net.ulich.crm.entity.EmailSignature"
+                    id="signaturesDc">
+            <fetchPlan extends="_base"/>
+            <loader id="signaturesDl">
+                <query>
+                    <![CDATA[select e from EmailSignature e order by e.name]]>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -25,7 +35,8 @@
             <formLayout id="form" dataContainer="emailTemplateDc">
                 <textField id="nameField" property="name"/>
                 <textField id="subjectField" property="subject"/>
-                <textArea id="contentField" height="9.5em" property="content" colspan="2" minHeight="400px"/>
+                <richTextEditor id="contentField" height="9.5em" property="content" colspan="2" minHeight="400px"/>
+                <entityComboBox id="signatureField" property="signature" itemsContainer="signaturesDc"/>
             </formLayout>
             <h4 text="msg://net.ulich.crm.entity/EmailTemplate.attachments"/>
             <hbox id="buttonsPanel" classNames="buttons-panel">

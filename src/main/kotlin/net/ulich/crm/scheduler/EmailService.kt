@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils
 import org.springframework.stereotype.Service
 import io.jmix.email.EmailAttachment as JmixEmailAttachment
 
+
 @Service
 class EmailService(
     private val emailer: Emailer,
@@ -24,10 +25,11 @@ class EmailService(
         toAddress: String,
         subject: String,
         body: String,
+        signature: String?,
         attachments: List<EmailAttachment>,
         personalization: Personalization
     ) {
-        val finalBody = body.replace("{{salutation}}", personalization.salutation)
+        val finalBody = body.replace("{{salutation}}", personalization.salutation) + signature.orEmpty()
         val attachmentFiles = prepareAttachments(attachments, personalization)
 
         sendEmail(toAddress, subject, finalBody, attachmentFiles)
@@ -39,8 +41,9 @@ class EmailService(
         body: String,
         attachments: List<FileRef>
     ) {
+
         emailer.sendEmailAsync(
-            EmailInfoBuilder.create(toAddress, subject, body)
+            EmailInfoBuilder.create(toAddress, subject, EmailHtmlEncoder.encode(body))
                 .setBodyContentType("text/html")
                 .setAttachments(attachments.map(::toJmixAttachment))
                 .build()

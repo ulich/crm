@@ -42,6 +42,7 @@ class Scheduler(
         val toAddress = email.lead?.email!!
         val subject = email.emailTemplate?.subject!!
         val body = email.emailTemplate?.content!!
+        val signature = email.emailTemplate?.signature
 
         val personalization = Personalization(
             salutation = email.lead?.salutation()!!,
@@ -52,7 +53,14 @@ class Scheduler(
             postCode = email.lead?.postCode,
             city = email.lead?.city,
         )
-        emailService.sendPersonalizedEmail(toAddress, subject, body, email.emailTemplate!!.attachments, personalization)
+        emailService.sendPersonalizedEmail(
+            toAddress,
+            subject,
+            body,
+            signature?.content,
+            email.emailTemplate!!.attachments,
+            personalization
+        )
 
         dataManager.save(email.apply {
             this.sentDate = OffsetDateTime.now()

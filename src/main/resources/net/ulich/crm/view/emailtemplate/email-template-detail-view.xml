@@ -35,7 +35,6 @@
             <formLayout id="form" dataContainer="emailTemplateDc">
                 <textField id="nameField" property="name"/>
                 <textField id="subjectField" property="subject"/>
-                <richTextEditor id="contentField" height="9.5em" property="content" colspan="2" minHeight="400px"/>
                 <entityComboBox id="signatureField" property="signature" itemsContainer="signaturesDc"/>
             </formLayout>
             <h4 text="msg://net.ulich.crm.entity/EmailTemplate.attachments"/>

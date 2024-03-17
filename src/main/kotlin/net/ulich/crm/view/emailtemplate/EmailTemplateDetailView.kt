@@ -1,5 +1,6 @@
 package net.ulich.crm.view.emailtemplate
 
+import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.notification.NotificationVariant
 import com.vaadin.flow.data.renderer.Renderer
@@ -8,10 +9,15 @@ import com.vaadin.flow.router.Route
 import io.jmix.core.security.CurrentAuthentication
 import io.jmix.flowui.Dialogs
 import io.jmix.flowui.Notifications
+import io.jmix.flowui.UiComponents
 import io.jmix.flowui.app.inputdialog.DialogActions
 import io.jmix.flowui.app.inputdialog.DialogOutcome
 import io.jmix.flowui.app.inputdialog.InputParameter
+import io.jmix.flowui.component.codeeditor.CodeEditor
+import io.jmix.flowui.component.richtexteditor.RichTextEditor
+import io.jmix.flowui.data.value.ContainerValueSource
 import io.jmix.flowui.kit.action.ActionPerformedEvent
+import io.jmix.flowui.model.InstanceContainer
 import io.jmix.flowui.view.*
 import net.ulich.crm.entity.EmailAttachment
 import net.ulich.crm.entity.EmailTemplate
@@ -26,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired
 @ViewDescriptor("email-template-detail-view.xml")
 @EditedEntityContainer("emailTemplateDc")
 class EmailTemplateDetailView : StandardDetailView<EmailTemplate>() {
+    @ViewComponent
+    private lateinit var form: FormLayout
 
     @Autowired
     private lateinit var emailService: EmailService
@@ -41,6 +49,24 @@ class EmailTemplateDetailView : StandardDetailView<EmailTemplate>() {
 
     @Autowired
     private lateinit var currentAuthentication: CurrentAuthentication
+
+    @Autowired
+    private lateinit var uiComponents: UiComponents
+
+    @ViewComponent
+    private lateinit var emailTemplateDc: InstanceContainer<EmailTemplate>
+
+    @Subscribe
+    private fun onReady(event: ReadyEvent) {
+        val clazz = if (editedEntity.content?.contains("<table>") == true)
+            CodeEditor::class.java else RichTextEditor::class.java
+
+        val contentField = uiComponents.create(clazz)
+        contentField.valueSource = ContainerValueSource(emailTemplateDc, "content")
+        contentField.label = messageBundle.getMessage("content")
+        form.add(contentField)
+        form.setColspan(contentField, 2)
+    }
 
     @Supply(to = "attachmentsDataGrid.file", subject = "renderer")
     private fun attachmentsDataGridFileRenderer(): Renderer<EmailAttachment> {

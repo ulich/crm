@@ -100,13 +100,13 @@ class LeadDetailView : StandardDetailView<Lead>() {
         private val berlin = ZoneId.of("Europe/Berlin")
 
         fun calculatePlannedSendDate(now: ZonedDateTime, day: Int, time: Date?): OffsetDateTime {
-            if (day < 2) {
+            if (time == null) {
                 return now.plusMinutes(5).toOffsetDateTime()
             }
 
-            val localTime = LocalDateTime.ofInstant(time?.toInstant(), ZoneId.systemDefault()).toLocalTime()
+            val localTime = LocalDateTime.ofInstant(time.toInstant(), ZoneId.systemDefault()).toLocalTime()
 
-            val date = now.with(addBusinessDays.apply(day - 1))
+            val date = if (day == 1) now else now.with(addBusinessDays.apply(day - 1))
             return date.toLocalDate()
                     .atTime(localTime)
                     .atZone(berlin)

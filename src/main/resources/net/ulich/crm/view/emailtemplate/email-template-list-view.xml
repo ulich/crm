@@ -27,6 +27,7 @@
             <button id="createBtn" action="emailTemplatesDataGrid.create"/>
             <button id="editBtn" action="emailTemplatesDataGrid.edit"/>
             <button id="removeBtn" action="emailTemplatesDataGrid.remove"/>
+            <button id="bulkSend" action="emailTemplatesDataGrid.bulkSend"/>
             <simplePagination id="pagination" dataLoader="emailTemplatesDl"/>
         </hbox>
         <dataGrid id="emailTemplatesDataGrid"
@@ -38,6 +39,7 @@
                 <action id="create" type="list_create"/>
                 <action id="edit" type="list_edit"/>
                 <action id="remove" type="list_remove"/>
+                <action id="bulkSend" type="list_itemTracking" icon="ENVELOPE" text="msg://bulkSend"/>
             </actions>
             <columns resizable="true">
                 <column property="name"/>

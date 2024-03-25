@@ -73,6 +73,7 @@ open class Lead {
     @Column(name = "CITY", length = 1024)
     var city: String? = null
 
+    @Lob
     @Column(name = "NOTES")
     var notes: String? = null
 

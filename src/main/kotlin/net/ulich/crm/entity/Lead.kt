@@ -1,11 +1,8 @@
 package net.ulich.crm.entity
 
-import io.jmix.core.DeletePolicy
 import io.jmix.core.annotation.DeletedBy
 import io.jmix.core.annotation.DeletedDate
 import io.jmix.core.entity.annotation.JmixGeneratedValue
-import io.jmix.core.entity.annotation.OnDelete
-import io.jmix.core.entity.annotation.OnDeleteInverse
 import io.jmix.core.metamodel.annotation.Composition
 import io.jmix.core.metamodel.annotation.InstanceName
 import io.jmix.core.metamodel.annotation.JmixEntity
@@ -35,7 +32,6 @@ open class Lead {
     private var status: String = LeadStatus.NEW.id
 
     @OrderBy("plannedSendDate ASC")
-    @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "lead")
     var scheduledEmails: MutableList<ScheduledEmail> = NotInstantiatedList()
@@ -77,8 +73,6 @@ open class Lead {
     @Column(name = "NOTES")
     var notes: String? = null
 
-    @OnDeleteInverse(DeletePolicy.DENY)
-    @OnDelete(DeletePolicy.UNLINK)
     @JoinColumn(name = "CAMPAIGN_ID", nullable = false)
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

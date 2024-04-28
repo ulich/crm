@@ -5,9 +5,7 @@
     <data>
         <collection id="campaignsDc"
                     class="net.ulich.crm.entity.Campaign">
-            <fetchPlan extends="_base">
-                <property name="scheduleItems" fetch="JOIN" fetchPlan="_base"/>
-            </fetchPlan>
+            <fetchPlan extends="_base"/>
             <loader id="campaignsDl" readOnly="true">
                 <query>
                     <![CDATA[select e from Campaign e order by e.name]]>

@@ -30,7 +30,12 @@ class LeadCsvImporter(private val dataManager: DataManager) {
             postCode = data.remove("PLZ")
             city = data.remove("Stadt")
             email = data.remove("E-Mail")
-            phoneNumber = data.remove("Telefon")
+            phoneNumber =
+                data.remove("Telefon") ?: data.remove("Rufnummer") ?: data.remove("Mobil") ?: data.remove("Handy")
+                        ?: data.remove("Mobiltelefon")
+            alternativePhoneNumber =
+                data.remove("Alternative Rufnummer") ?: data.remove("Mobil") ?: data.remove("Handy")
+                        ?: data.remove("Mobiltelefon")
             notes = data.map { "${it.key}: ${it.value}" }.joinToString("\n")
         }
     }

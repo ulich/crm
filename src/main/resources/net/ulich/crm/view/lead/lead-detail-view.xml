@@ -50,7 +50,7 @@
                 <textField id="firstNameField" property="firstName"/>
                 <textField id="lastNameField" property="lastName"/>
                 <textField id="phoneNumberField" property="phoneNumber"/>
-                <textField id="mobilePhoneNumberField" property="mobilePhoneNumber"/>
+                <textField id="altPhoneNumberField" property="alternativePhoneNumber"/>
             </formLayout>
 
             <div height="20px"/>

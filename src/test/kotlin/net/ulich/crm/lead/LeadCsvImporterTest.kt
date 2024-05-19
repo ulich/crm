@@ -1,6 +1,7 @@
 package net.ulich.crm.lead
 
 import io.jmix.core.DataManager
+import net.ulich.crm.entity.Gender
 import net.ulich.crm.entity.Lead
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -23,11 +24,12 @@ class LeadCsvImporterTest {
     fun testImportFromCsv() {
         val lead = importer.importFromCsv(
             """
-            Anfrage gestellt	ID	Firma	Vorname	Nachname	Straße	PLZ	Stadt	Land	E-Mail	Rufnummer	Alternative Rufnummer	Mobil	Einsatzort	Anzahl Personen	Kommentar
-            12.03.2024 09:18	136353	Some Company GmbH	Max	Mustermann	Hauptstraße 1	12345	Berlin	DE	max.muster@gmbh.de	+49 123 456789	+49 987 654321	+49 174 12345	Ladenlokal	100+	Allgemeine Rufnummer: 0333 132321""".trimIndent()
+            Anfrage gestellt	ID	Firma	Anrede	Vorname	Nachname	Straße	PLZ	Stadt	Land	E-Mail	Rufnummer	Alternative Rufnummer	Mobil	Einsatzort	Anzahl Personen	Kommentar
+            12.03.2024 09:18	136353	Some Company GmbH	Herr	Max	Mustermann	Hauptstraße 1	12345	Berlin	DE	max.muster@gmbh.de	+49 123 456789	+49 987 654321	+49 174 12345	Ladenlokal	100+	Allgemeine Rufnummer: 0333 132321""".trimIndent()
         )
 
         assertThat(lead).isNotNull()
+        assertThat(lead?.getGender()).isEqualTo(Gender.MR)
         assertThat(lead?.companyName).isEqualTo("Some Company GmbH")
         assertThat(lead?.firstName).isEqualTo("Max")
         assertThat(lead?.lastName).isEqualTo("Mustermann")

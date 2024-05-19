@@ -85,6 +85,7 @@ class LeadDetailView : StandardDetailView<Lead>() {
     }
 
     fun prefillWith(lead: Lead) {
+        editedEntity.setGender(lead.getGender())
         editedEntity.companyName = lead.companyName
         editedEntity.firstName = lead.firstName
         editedEntity.lastName = lead.lastName

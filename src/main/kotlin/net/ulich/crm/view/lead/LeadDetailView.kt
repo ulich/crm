@@ -93,6 +93,7 @@ class LeadDetailView : StandardDetailView<Lead>() {
         editedEntity.city = lead.city
         editedEntity.email = lead.email
         editedEntity.phoneNumber = lead.phoneNumber
+        editedEntity.alternativePhoneNumber = lead.alternativePhoneNumber
         editedEntity.notes = lead.notes
     }
 

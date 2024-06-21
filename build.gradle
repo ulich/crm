@@ -37,6 +37,7 @@ dependencies {
     implementation 'io.jmix.datatools:jmix-datatools-flowui-starter'
     implementation 'io.jmix.email:jmix-email-starter'
     implementation 'io.jmix.email:jmix-email-flowui-starter'
+    implementation 'io.jmix.charts:jmix-charts-flowui-starter'
     implementation 'io.jmix.translations:jmix-translations-de'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'

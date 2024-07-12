@@ -36,6 +36,7 @@
             <button id="createFromCsvBtn" action="leadsDataGrid.createFromCsv"/>
             <button id="editBtn" action="leadsDataGrid.edit"/>
             <button id="removeBtn" action="leadsDataGrid.remove"/>
+            <button id="sendMailBtn" action="leadsDataGrid.sendMail"/>
             <simplePagination id="pagination" dataLoader="leadsDl"/>
         </hbox>
         <dataGrid id="leadsDataGrid"
@@ -48,6 +49,7 @@
                 <action id="createFromCsv" text="msg://createFromCsv" icon="lumo:plus"/>
                 <action id="edit" type="list_edit"/>
                 <action id="remove" type="list_remove"/>
+                <action id="sendMail" text="msg://sendMail" icon="vaadin:envelope"/>
             </actions>
             <columns resizable="true">
                 <column property="email"/>

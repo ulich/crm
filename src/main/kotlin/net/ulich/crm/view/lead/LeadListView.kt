@@ -12,9 +12,13 @@ import io.jmix.flowui.app.inputdialog.DialogOutcome
 import io.jmix.flowui.app.inputdialog.InputDialog
 import io.jmix.flowui.app.inputdialog.InputParameter
 import io.jmix.flowui.kit.action.ActionPerformedEvent
+import io.jmix.flowui.model.CollectionContainer
+import io.jmix.flowui.model.CollectionLoader
 import io.jmix.flowui.view.*
+import net.ulich.crm.entity.EmailTemplate
 import net.ulich.crm.entity.Lead
 import net.ulich.crm.lead.LeadCsvImporter
+import net.ulich.crm.scheduler.LeadEmailService
 import net.ulich.crm.view.main.MainView
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -24,6 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired
 @LookupComponent("leadsDataGrid")
 @DialogMode(width = "64em")
 class LeadListView : StandardListView<Lead>() {
+    @ViewComponent
+    private lateinit var leadsDl: CollectionLoader<Lead>
+
+    @ViewComponent
+    private lateinit var leadsDc: CollectionContainer<Lead>
+
     @Autowired
     private lateinit var dialogs: Dialogs
 
@@ -38,6 +48,9 @@ class LeadListView : StandardListView<Lead>() {
 
     @Autowired
     private lateinit var viewNavigators: ViewNavigators
+
+    @Autowired
+    private lateinit var leadEmailService: LeadEmailService
 
     @Subscribe("leadsDataGrid.createFromCsv")
     private fun onLeadsDataGridCreateFromCsv(event: ActionPerformedEvent) {
@@ -79,5 +92,46 @@ class LeadListView : StandardListView<Lead>() {
         val field = TextArea()
         field.width = "100%"
         return field
+    }
+
+    @Subscribe("leadsDataGrid.sendMail")
+    private fun onLeadsDataGridSendMail(event: ActionPerformedEvent) {
+        dialogs.createInputDialog(this)
+            .withHeader(messages.getMessage(this.javaClass, "sendMailHeader"))
+            .withLabelsPosition(Dialogs.InputDialogBuilder.LabelsPosition.TOP)
+            .withParameters(
+                InputParameter.entityParameter("emailTemplate", EmailTemplate::class.java)
+                    .withLabel(messages.getMessage(this.javaClass, "emailTemplateLabel"))
+                    .withRequired(true)
+            )
+            .withActions(DialogActions.OK_CANCEL)
+            .withCloseListener(::sendEmailDialogClosed)
+            .open()
+    }
+
+    private fun sendEmailDialogClosed(event: InputDialog.InputDialogCloseEvent?) {
+        if (event == null || !event.closedWith(DialogOutcome.OK)) {
+            return
+        }
+
+        val emailTemplate = event.getValue<EmailTemplate>("emailTemplate")
+
+        val oldMaxResults = leadsDl.maxResults
+        leadsDl.maxResults = 1000000
+        leadsDl.load()
+
+        try {
+            leadsDc.items.forEach {
+                leadEmailService.sendEmailToLead(emailTemplate!!, it)
+            }
+            leadEmailService.processQueuedEmails()
+
+            notifications.create(messages.formatMessage(this.javaClass, "sendMailSuccess", leadsDc.items.size))
+                .withType(Notifications.Type.SUCCESS)
+                .show()
+        } finally {
+            leadsDl.maxResults = oldMaxResults
+            leadsDl.load()
+        }
     }
 }

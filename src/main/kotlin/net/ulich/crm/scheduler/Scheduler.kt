@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit
 class Scheduler(
     private val dataManager: DataManager,
     private val systemAuthenticator: SystemAuthenticator,
-    private val emailService: EmailService,
+    private val leadEmailService: LeadEmailService,
 ) {
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     fun schedule() {
         systemAuthenticator.withSystem(::start)
-        emailService.processQueuedEmails()
+        leadEmailService.processQueuedEmails()
     }
 
     private fun start() {
@@ -39,28 +39,7 @@ class Scheduler(
     }
 
     private fun handleEmail(email: ScheduledEmail) {
-        val toAddress = email.lead?.email!!
-        val subject = email.emailTemplate?.subject!!
-        val body = email.emailTemplate?.content!!
-        val signature = email.emailTemplate?.signature
-
-        val personalization = Personalization(
-            salutation = email.lead?.salutation()!!,
-            firstName = email.lead?.firstName,
-            lastName = email.lead?.lastName,
-            companyName = email.lead?.companyName,
-            street = email.lead?.street,
-            postCode = email.lead?.postCode,
-            city = email.lead?.city,
-        )
-        emailService.sendPersonalizedEmail(
-            toAddress,
-            subject,
-            body,
-            signature?.content,
-            email.emailTemplate!!.attachments,
-            personalization
-        )
+        leadEmailService.sendEmailToLead(email.emailTemplate!!, email.lead!!)
 
         dataManager.save(email.apply {
             this.sentDate = OffsetDateTime.now()

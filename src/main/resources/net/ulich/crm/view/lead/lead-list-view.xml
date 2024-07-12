@@ -43,13 +43,14 @@
                   width="100%"
                   minHeight="20em"
                   dataContainer="leadsDc"
-                  columnReorderingAllowed="true">
+                  columnReorderingAllowed="true"
+                  selectionMode="MULTI">
             <actions>
                 <action id="create" type="list_create"/>
                 <action id="createFromCsv" text="msg://createFromCsv" icon="lumo:plus"/>
                 <action id="edit" type="list_edit"/>
                 <action id="remove" type="list_remove"/>
-                <action id="sendMail" text="msg://sendMail" icon="vaadin:envelope"/>
+                <action id="sendMail" text="msg://sendMail" icon="vaadin:envelope" type="list_itemTracking"/>
             </actions>
             <columns resizable="true">
                 <column property="email"/>

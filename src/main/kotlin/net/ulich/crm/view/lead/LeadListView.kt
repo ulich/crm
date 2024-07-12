@@ -1,6 +1,7 @@
 package net.ulich.crm.view.lead
 
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.checkbox.Checkbox
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.router.Route
 import io.jmix.core.Messages
@@ -11,6 +12,7 @@ import io.jmix.flowui.app.inputdialog.DialogActions
 import io.jmix.flowui.app.inputdialog.DialogOutcome
 import io.jmix.flowui.app.inputdialog.InputDialog
 import io.jmix.flowui.app.inputdialog.InputParameter
+import io.jmix.flowui.component.grid.DataGrid
 import io.jmix.flowui.kit.action.ActionPerformedEvent
 import io.jmix.flowui.model.CollectionContainer
 import io.jmix.flowui.model.CollectionLoader
@@ -28,6 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired
 @LookupComponent("leadsDataGrid")
 @DialogMode(width = "64em")
 class LeadListView : StandardListView<Lead>() {
+    @ViewComponent
+    private lateinit var leadsDataGrid: DataGrid<Lead>
+
     @ViewComponent
     private lateinit var leadsDl: CollectionLoader<Lead>
 
@@ -96,14 +101,27 @@ class LeadListView : StandardListView<Lead>() {
 
     @Subscribe("leadsDataGrid.sendMail")
     private fun onLeadsDataGridSendMail(event: ActionPerformedEvent) {
+        val parameters = mutableListOf(
+            InputParameter.entityParameter("emailTemplate", EmailTemplate::class.java)
+                .withLabel(messages.getMessage(this.javaClass, "emailTemplateLabel"))
+                .withRequired(true),
+        )
+        if (leadsDataGrid.selectedItems.size == leadsDataGrid.pageSize) {
+            parameters.add(
+                InputParameter.booleanParameter("sendToAll")
+                    .withField {
+                        Checkbox().apply {
+                            label = messages.getMessage(LeadDetailView::class.java, "sendToAllLabel")
+                        }
+                    }
+                    .withDefaultValue(true)
+            )
+        }
+
         dialogs.createInputDialog(this)
             .withHeader(messages.getMessage(this.javaClass, "sendMailHeader"))
             .withLabelsPosition(Dialogs.InputDialogBuilder.LabelsPosition.TOP)
-            .withParameters(
-                InputParameter.entityParameter("emailTemplate", EmailTemplate::class.java)
-                    .withLabel(messages.getMessage(this.javaClass, "emailTemplateLabel"))
-                    .withRequired(true)
-            )
+            .withParameters(*parameters.toTypedArray())
             .withActions(DialogActions.OK_CANCEL)
             .withCloseListener(::sendEmailDialogClosed)
             .open()
@@ -115,23 +133,31 @@ class LeadListView : StandardListView<Lead>() {
         }
 
         val emailTemplate = event.getValue<EmailTemplate>("emailTemplate")
+        val sendToAll = event.getValue<Boolean>("sendToAll") ?: false
+
+        var leads = leadsDataGrid.selectedItems.toList()
 
         val oldMaxResults = leadsDl.maxResults
-        leadsDl.maxResults = 1000000
-        leadsDl.load()
+        if (sendToAll) {
+            leadsDl.maxResults = 1000000
+            leadsDl.load()
+            leads = leadsDc.items
+        }
 
         try {
-            leadsDc.items.forEach {
+            leads.forEach {
                 leadEmailService.sendEmailToLead(emailTemplate!!, it)
             }
             leadEmailService.processQueuedEmails()
 
-            notifications.create(messages.formatMessage(this.javaClass, "sendMailSuccess", leadsDc.items.size))
+            notifications.create(messages.formatMessage(this.javaClass, "sendMailSuccess", leads.size))
                 .withType(Notifications.Type.SUCCESS)
                 .show()
         } finally {
-            leadsDl.maxResults = oldMaxResults
-            leadsDl.load()
+            if (sendToAll) {
+                leadsDl.maxResults = oldMaxResults
+                leadsDl.load()
+            }
         }
     }
 }

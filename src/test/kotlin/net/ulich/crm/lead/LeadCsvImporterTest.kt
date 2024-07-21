@@ -83,4 +83,17 @@ class LeadCsvImporterTest {
                 """.trimIndent()
         )
     }
+
+    @Test
+    fun testImportWithSanitizing() {
+        val lead = importer.importFromCsv(
+            """
+            "Anfrage gestellt";ID;Firma
+            "12.03.2024 09:18";136353;"Some	Com		pany 	 GmbH "
+            """.trimIndent()
+        )
+
+        assertThat(lead).isNotNull()
+        assertThat(lead?.companyName).isEqualTo("Some Com pany GmbH")
+    }
 }

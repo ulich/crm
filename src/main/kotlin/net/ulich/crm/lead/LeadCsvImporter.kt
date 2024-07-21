@@ -40,7 +40,7 @@ class LeadCsvImporter(private val dataManager: DataManager) {
         }
 
         val header = lines[0]
-        val dataRow = lines[1]
+        val dataRow = lines[1].map { sanitize(it) }
 
         if (header.size < 2) {
             return null
@@ -65,6 +65,11 @@ class LeadCsvImporter(private val dataManager: DataManager) {
                         ?: data.remove("Mobiltelefon")
             notes = data.map { "${it.key}: ${it.value}" }.joinToString("\n")
         }
+    }
+
+    private fun sanitize(s: String): String {
+        return s.trim()
+            .replace(Regex("\\s{1,}"), " ")
     }
 
     private fun csvParser(separator: Char): CSVParser {

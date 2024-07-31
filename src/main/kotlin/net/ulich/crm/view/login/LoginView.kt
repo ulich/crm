@@ -17,9 +17,7 @@ import io.jmix.securityflowui.authentication.AuthDetails
 import io.jmix.securityflowui.authentication.LoginViewSupport
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-
-import java.util.Locale
+import java.util.*
 
 @Route(value = "login")
 @ViewController("LoginView")
@@ -32,7 +30,7 @@ open class LoginView : StandardView(), LocaleChangeObserver {
     @Autowired
     private lateinit var loginViewSupport: LoginViewSupport
 
-    @Autowired
+    @ViewComponent
     private lateinit var messageBundle: MessageBundle
 
     @Autowired

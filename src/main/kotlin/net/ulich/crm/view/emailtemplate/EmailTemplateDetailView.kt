@@ -41,7 +41,7 @@ class EmailTemplateDetailView : StandardDetailView<EmailTemplate>() {
     @Autowired
     private lateinit var notifications: Notifications
 
-    @Autowired
+    @ViewComponent
     private lateinit var messageBundle: MessageBundle
 
     @Autowired

@@ -1,16 +1,15 @@
 package net.ulich.crm.view.user
 
-import net.ulich.crm.entity.User
-import net.ulich.crm.view.main.MainView
 import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.router.Route
 import io.jmix.core.EntityStates
 import io.jmix.flowui.component.textfield.TypedTextField
 import io.jmix.flowui.view.*
+import net.ulich.crm.entity.User
+import net.ulich.crm.view.main.MainView
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
-
 import java.util.*
 
 @Route(value = "users/:id", layout = MainView::class)
@@ -34,7 +33,7 @@ open class UserDetailView : StandardDetailView<User>() {
     @Autowired
     private lateinit var entityStates: EntityStates
 
-    @Autowired
+    @ViewComponent
     private lateinit var messageBundle: MessageBundle
 
     @Autowired

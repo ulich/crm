@@ -33,7 +33,7 @@ class EmailTemplateListView : StandardListView<EmailTemplate>() {
     @Autowired
     private lateinit var dialogs: Dialogs
 
-    @Autowired
+    @ViewComponent
     private lateinit var messageBundle: MessageBundle
 
     @Autowired

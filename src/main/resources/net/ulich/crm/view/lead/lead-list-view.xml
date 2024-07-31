@@ -14,6 +14,15 @@
                 </query>
             </loader>
         </collection>
+        <collection id="campaignsDc"
+                    class="net.ulich.crm.entity.Campaign">
+            <fetchPlan extends="_base"/>
+            <loader id="campaignsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from Campaign e order by e.name asc]]>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -27,10 +36,77 @@
         <action id="discardAction" type="lookup_discard"/>
     </actions>
     <layout>
-        <genericFilter id="genericFilter"
-                       dataLoader="leadsDl">
-            <properties include=".*"/>
-        </genericFilter>
+        <details summaryText="msg://simpleFilter" opened="true" width="100%">
+            <hbox width="100%">
+                <propertyFilter
+                        id="emailFilter"
+                        labelPosition="TOP"
+                        property="email"
+                        operation="CONTAINS"
+                        width="100%"
+                        dataLoader="leadsDl"
+                        label="msg://net.ulich.crm.entity/Lead.email"/>
+                <propertyFilter
+                        id="companyNameFilter"
+                        labelPosition="TOP"
+                        property="companyName"
+                        operation="CONTAINS"
+                        width="100%"
+                        dataLoader="leadsDl"
+                        label="msg://net.ulich.crm.entity/Lead.companyName"/>
+                <propertyFilter
+                        id="lastNameFilter"
+                        labelPosition="TOP"
+                        property="lastName"
+                        operation="CONTAINS"
+                        width="100%"
+                        dataLoader="leadsDl"
+                        label="msg://net.ulich.crm.entity/Lead.lastName"/>
+            </hbox>
+        </details>
+        <details summaryText="msg://moreFilters" opened="false" width="100%">
+            <hbox width="100%">
+                <propertyFilter
+                        id="statusFilter"
+                        labelPosition="TOP"
+                        property="status"
+                        operation="IN_LIST"
+                        width="100%"
+                        dataLoader="leadsDl"
+                        label="msg://net.ulich.crm.entity/Lead.status"/>
+                <propertyFilter
+                        id="campaignFilter"
+                        labelPosition="TOP"
+                        property="campaign"
+                        operation="IN_LIST"
+                        width="100%"
+                        dataLoader="leadsDl"
+                        label="msg://net.ulich.crm.entity/Lead.campaign"/>
+            </hbox>
+            <hbox width="100%">
+                <propertyFilter
+                        id="createdDateMinFilter"
+                        labelPosition="TOP"
+                        property="createdDate"
+                        operation="GREATER_OR_EQUAL"
+                        width="100%"
+                        dataLoader="leadsDl"
+                        label="msg://createdDateMin"/>
+                <propertyFilter
+                        id="createdDateMaxFilter"
+                        labelPosition="TOP"
+                        property="createdDate"
+                        operation="LESS_OR_EQUAL"
+                        width="100%"
+                        dataLoader="leadsDl"
+                        label="msg://createdDateMax"/>
+            </hbox>
+
+            <genericFilter id="genericFilter"
+                           dataLoader="leadsDl" opened="true">
+                <properties include=".*"/>
+            </genericFilter>
+        </details>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button id="createBtn" action="leadsDataGrid.create"/>
             <button id="createFromCsvBtn" action="leadsDataGrid.createFromCsv"/>

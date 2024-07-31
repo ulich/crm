@@ -49,8 +49,16 @@
                 <select id="genderField" property="gender"/>
                 <textField id="firstNameField" property="firstName"/>
                 <textField id="lastNameField" property="lastName"/>
-                <textField id="phoneNumberField" property="phoneNumber"/>
-                <textField id="alternativePhoneNumber" property="alternativePhoneNumber"/>
+                <hbox width="100%" alignItems="END">
+                    <textField id="phoneNumberField" property="phoneNumber" width="100%"
+                               label="msg://net.ulich.crm.entity/Lead.phoneNumber"/>
+                    <button id="callButton" icon="vaadin:phone"/>
+                </hbox>
+                <hbox width="100%" alignItems="END">
+                    <textField id="alternativePhoneNumber" property="alternativePhoneNumber" width="100%"
+                               label="msg://net.ulich.crm.entity/Lead.alternativePhoneNumber"/>
+                    <button id="callAltNumberButton" icon="vaadin:phone"/>
+                </hbox>
             </formLayout>
 
             <div height="20px"/>

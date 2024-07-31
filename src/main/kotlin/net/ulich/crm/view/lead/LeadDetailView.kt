@@ -1,10 +1,13 @@
 package net.ulich.crm.view.lead
 
 import com.vaadin.flow.component.AbstractField
+import com.vaadin.flow.component.ClickEvent
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.router.Route
 import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
 import io.jmix.flowui.component.combobox.EntityComboBox
+import io.jmix.flowui.kit.component.button.JmixButton
 import io.jmix.flowui.model.CollectionPropertyContainer
 import io.jmix.flowui.model.DataContext
 import io.jmix.flowui.view.*
@@ -126,5 +129,27 @@ class LeadDetailView : StandardDetailView<Lead>() {
                         .plusDays((businessDays % 5).toLong())
             }
         }
+    }
+
+    @Subscribe(id = "callButton", subject = "clickListener")
+    private fun onCallButtonClick(event: ClickEvent<JmixButton>) {
+        callNumber(editedEntity.phoneNumber)
+    }
+
+    @Subscribe(id = "callAltNumberButton", subject = "clickListener")
+    private fun onCallAltNumberButtonClick(event: ClickEvent<JmixButton>) {
+        callNumber(editedEntity.alternativePhoneNumber)
+    }
+
+    private fun callNumber(number: String?) {
+        if (number.isNullOrBlank()) {
+            return
+        }
+
+        // we are using execute JS here with window.open instead of UI.getCurrent().getPage().open()
+        // because vaadin calls internally 'this.stopApplication()' which breaks the application when
+        // cancelling the system dialog, that asks if the number should be called.
+        // We have seen after cancellation of tha dialog, that the tabs of the detail view are not working anymore
+        UI.getCurrent().page.executeJs("var callApp = window.open($0, '_blank'); callApp.close();", "tel:${number}")
     }
 }

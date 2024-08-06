@@ -150,6 +150,6 @@ class LeadDetailView : StandardDetailView<Lead>() {
         // because vaadin calls internally 'this.stopApplication()' which breaks the application when
         // cancelling the system dialog, that asks if the number should be called.
         // We have seen after cancellation of tha dialog, that the tabs of the detail view are not working anymore
-        UI.getCurrent().page.executeJs("window.open($0);", "tel:${number}")
+        UI.getCurrent().page.executeJs("document.location.href = $0;", "tel:${number}")
     }
 }

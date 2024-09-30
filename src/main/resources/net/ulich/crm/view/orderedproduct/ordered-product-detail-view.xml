@@ -16,6 +16,15 @@
                 </query>
             </loader>
         </collection>
+        <collection class="net.ulich.crm.entity.ProductAddOn"
+                    id="productAddOnsDc">
+            <fetchPlan extends="_base"/>
+            <loader id="productAddOnsDl">
+                <query>
+                    <![CDATA[select e from ProductAddOn e order by e.name]]>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -27,8 +36,9 @@
     <layout>
         <formLayout id="form" dataContainer="orderedProductDc">
             <entityComboBox id="productField" property="product" itemsContainer="productsDc"/>
-            <datePicker id="orderDateField" property="orderDate"/>
-            <integerField id="amountField" property="amount"/>
+            <entityComboBox id="productAddOnField" property="productAddOn" itemsContainer="productAddOnsDc"/>
+            <datePicker id="deliveryDateField" property="deliveryDate"/>
+            <textField id="serialNumberField" property="serialNumber"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>

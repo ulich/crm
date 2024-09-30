@@ -1,10 +1,9 @@
 package net.ulich.crm.entity
 
-import io.jmix.core.DeletePolicy
 import io.jmix.core.annotation.DeletedBy
 import io.jmix.core.annotation.DeletedDate
 import io.jmix.core.entity.annotation.JmixGeneratedValue
-import io.jmix.core.entity.annotation.OnDeleteInverse
+import io.jmix.core.metamodel.annotation.InstanceName
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
@@ -12,48 +11,22 @@ import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
-import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
 
 @JmixEntity
-@Table(
-    name = "ORDERED_PRODUCT", indexes = [
-        Index(name = "IDX_ORDERED_PRODUCT_LEAD", columnList = "LEAD_ID"),
-        Index(name = "IDX_ORDERED_PRODUCT_PRODUCT", columnList = "PRODUCT_ID"),
-        Index(name = "IDX_ORDERED_PRODUCT_PRODUCT_ADD_ON", columnList = "PRODUCT_ADD_ON_ID")
-    ]
-)
+@Table(name = "PRODUCT_ADD_ON")
 @Entity
-open class OrderedProduct {
+open class ProductAddOn {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
     var id: UUID? = null
 
-    @OnDeleteInverse(DeletePolicy.CASCADE)
-    @JoinColumn(name = "LEAD_ID", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var lead: Lead? = null
-
-    @OnDeleteInverse(DeletePolicy.DENY)
-    @JoinColumn(name = "PRODUCT_ID", nullable = false)
+    @InstanceName
+    @Column(name = "NAME", nullable = false)
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var product: Product? = null
-
-    @Column(name = "DELIVERY_DATE", nullable = false)
-    @NotNull
-    var deliveryDate: LocalDate? = LocalDate.now()
-
-    @Column(name = "SERIAL_NUMBER", length = 4096)
-    var serialNumber: String? = null
-
-    @OnDeleteInverse(DeletePolicy.DENY)
-    @JoinColumn(name = "PRODUCT_ADD_ON_ID", nullable = false)
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var productAddOn: ProductAddOn? = null
+    var name: String? = null
 
     @Column(name = "VERSION", nullable = false)
     @Version
@@ -82,4 +55,5 @@ open class OrderedProduct {
     @DeletedDate
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
+
 }

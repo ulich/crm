@@ -36,7 +36,7 @@ open class Lead {
     @OneToMany(mappedBy = "lead")
     var scheduledEmails: MutableList<ScheduledEmail> = NotInstantiatedList()
 
-    @OrderBy("orderDate ASC")
+    @OrderBy("deliveryDate ASC")
     @Composition
     @OneToMany(mappedBy = "lead")
     var orderedProducts: MutableList<OrderedProduct> = NotInstantiatedList()

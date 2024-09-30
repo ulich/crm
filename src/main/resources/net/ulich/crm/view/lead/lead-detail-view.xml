@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      title="msg://leadDetailView.title"
-      focusComponent="form">
+      title="msg://leadDetailView.title">
     <data>
         <instance id="leadDc"
                   class="net.ulich.crm.entity.Lead">
@@ -92,9 +91,10 @@
                     <action id="remove" type="list_remove"/>
                 </actions>
                 <columns resizable="true">
-                    <column property="orderDate"/>
-                    <column property="product.name"/>
-                    <column property="amount"/>
+                    <column property="deliveryDate"/>
+                    <column property="product"/>
+                    <column property="productAddOn"/>
+                    <column property="serialNumber"/>
                 </columns>
             </dataGrid>
 

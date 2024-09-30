@@ -16,10 +16,13 @@
             <column name="PRODUCT_ID" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="ORDER_DATE" type="DATE">
+            <column name="PRODUCT_ADD_ON_ID" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="AMOUNT" type="INT"/>
+            <column name="DELIVERY_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SERIAL_NUMBER" type="VARCHAR(4096)"/>
             <column name="VERSION" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -48,5 +51,14 @@
         <addForeignKeyConstraint baseColumnNames="LEAD_ID" baseTableName="ORDERED_PRODUCT"
                                  constraintName="FK_ORDERED_PRODUCT_ON_LEAD" referencedColumnNames="ID"
                                  referencedTableName="LEAD_"/>
+    </changeSet>
+    <changeSet id="4" author="crm">
+        <createIndex indexName="IDX_ORDERED_PRODUCT_PRODUCT_ADD_ON" tableName="ORDERED_PRODUCT">
+            <column name="PRODUCT_ADD_ON_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_ADD_ON_ID" baseTableName="ORDERED_PRODUCT"
+                                 constraintName="FK_ORDERED_PRODUCT_ON_PRODUCT_ADD_ON" referencedColumnNames="ID"
+                                 referencedTableName="PRODUCT_ADD_ON"/>
     </changeSet>
 </databaseChangeLog>

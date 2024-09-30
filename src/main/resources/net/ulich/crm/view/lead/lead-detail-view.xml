@@ -10,9 +10,13 @@
                 <property name="scheduledEmails" fetchPlan="_base">
                     <property name="emailTemplate" fetch="JOIN" fetchPlan="_base"/>
                 </property>
+                <property name="orderedProducts" fetchPlan="_base">
+                    <property name="product" fetch="JOIN" fetchPlan="_base"/>
+                </property>
             </fetchPlan>
             <loader/>
             <collection id="scheduledEmailsDc" property="scheduledEmails"/>
+            <collection id="orderedProductsDc" property="orderedProducts"/>
         </instance>
         <collection class="net.ulich.crm.entity.Campaign"
                     id="campaignsDc">
@@ -65,6 +69,34 @@
             <formLayout dataContainer="leadDc">
                 <textArea id="notesField" property="notes" label="msg://notes" height="200px" colspan="2"/>
             </formLayout>
+
+            <div height="20px"/>
+            <h3 text="msg://orderedProducts"/>
+            <hbox id="buttonsPanel" classNames="buttons-panel">
+                <button action="orderedProductsDataGrid.create"/>
+                <button action="orderedProductsDataGrid.edit"/>
+                <button action="orderedProductsDataGrid.remove"/>
+            </hbox>
+            <dataGrid id="orderedProductsDataGrid" dataContainer="orderedProductsDc" width="100%" height="300px">
+                <actions>
+                    <action id="create" type="list_create">
+                        <properties>
+                            <property name="openMode" value="DIALOG"/>
+                        </properties>
+                    </action>
+                    <action id="edit" type="list_edit">
+                        <properties>
+                            <property name="openMode" value="DIALOG"/>
+                        </properties>
+                    </action>
+                    <action id="remove" type="list_remove"/>
+                </actions>
+                <columns resizable="true">
+                    <column property="orderDate"/>
+                    <column property="product.name"/>
+                    <column property="amount"/>
+                </columns>
+            </dataGrid>
 
             <div height="20px"/>
             <h3 text="msg://emails"/>

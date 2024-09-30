@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://orderedProductDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="orderedProductDc"
+                  class="net.ulich.crm.entity.OrderedProduct">
+            <loader/>
+        </instance>
+        <collection class="net.ulich.crm.entity.Product"
+                    id="productsDc">
+            <fetchPlan extends="_base"/>
+            <loader id="productsDl">
+                <query>
+                    <![CDATA[select e from Product e order by e.name]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="orderedProductDc">
+            <entityComboBox id="productField" property="product" itemsContainer="productsDc"/>
+            <datePicker id="orderDateField" property="orderDate"/>
+            <integerField id="amountField" property="amount"/>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

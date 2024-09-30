@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="crm">
+        <createTable tableName="ORDERED_PRODUCT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDERED_PRODUCT"/>
+            </column>
+            <column name="LEAD_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDER_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT" type="INT"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="crm">
+        <createIndex indexName="IDX_ORDERED_PRODUCT_PRODUCT" tableName="ORDERED_PRODUCT">
+            <column name="PRODUCT_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_ID" baseTableName="ORDERED_PRODUCT"
+                                 constraintName="FK_ORDERED_PRODUCT_ON_PRODUCT" referencedColumnNames="ID"
+                                 referencedTableName="PRODUCT"/>
+    </changeSet>
+    <changeSet id="3" author="crm">
+        <createIndex indexName="IDX_ORDERED_PRODUCT_LEAD" tableName="ORDERED_PRODUCT">
+            <column name="LEAD_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="LEAD_ID" baseTableName="ORDERED_PRODUCT"
+                                 constraintName="FK_ORDERED_PRODUCT_ON_LEAD" referencedColumnNames="ID"
+                                 referencedTableName="LEAD_"/>
+    </changeSet>
+</databaseChangeLog>

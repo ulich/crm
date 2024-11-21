@@ -46,6 +46,9 @@ open class OrderedProduct {
     @NotNull
     var deliveryDate: LocalDate? = LocalDate.now()
 
+    @Column(name = "TERM_END_DATE")
+    var termEndDate: LocalDate? = null
+
     @Column(name = "SERIAL_NUMBER", length = 4096)
     var serialNumber: String? = null
 

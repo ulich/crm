@@ -38,6 +38,7 @@
             <entityComboBox id="productField" property="product" itemsContainer="productsDc"/>
             <entityComboBox id="productAddOnField" property="productAddOn" itemsContainer="productAddOnsDc"/>
             <datePicker id="deliveryDateField" property="deliveryDate"/>
+            <datePicker id="termEndDateField" property="termEndDate"/>
             <textField id="serialNumberField" property="serialNumber"/>
         </formLayout>
         <hbox id="detailActions">

@@ -95,6 +95,7 @@
                     <column property="product"/>
                     <column property="productAddOn"/>
                     <column property="serialNumber"/>
+                    <column property="termEndDate"/>
                 </columns>
             </dataGrid>
 

@@ -24,7 +24,7 @@ open class ProductAddOn {
     var id: UUID? = null
 
     @InstanceName
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false, length = 1024)
     @NotNull
     var name: String? = null
 

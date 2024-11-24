@@ -6,15 +6,20 @@ import com.vaadin.flow.component.UI
 import com.vaadin.flow.router.Route
 import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
+import io.jmix.flowui.DialogWindows
 import io.jmix.flowui.component.combobox.EntityComboBox
+import io.jmix.flowui.component.grid.DataGrid
+import io.jmix.flowui.kit.action.ActionPerformedEvent
 import io.jmix.flowui.kit.component.button.JmixButton
 import io.jmix.flowui.model.CollectionPropertyContainer
 import io.jmix.flowui.model.DataContext
 import io.jmix.flowui.view.*
 import net.ulich.crm.entity.Campaign
 import net.ulich.crm.entity.Lead
+import net.ulich.crm.entity.OrderedProduct
 import net.ulich.crm.entity.ScheduledEmail
 import net.ulich.crm.view.main.MainView
+import net.ulich.crm.view.orderedproduct.OrderedProductDetailView
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.*
 import java.time.temporal.TemporalAdjuster
@@ -32,6 +37,9 @@ class LeadDetailView : StandardDetailView<Lead>() {
     @ViewComponent
     private lateinit var scheduledEmailsDc: CollectionPropertyContainer<ScheduledEmail>
 
+    @ViewComponent
+    private lateinit var orderedProductsDc: CollectionPropertyContainer<OrderedProduct>
+
     @Autowired
     private lateinit var dataManager: DataManager
 
@@ -42,10 +50,16 @@ class LeadDetailView : StandardDetailView<Lead>() {
     private lateinit var campaignField: EntityComboBox<Campaign>
 
     @ViewComponent
+    private lateinit var orderedProductsDataGrid: DataGrid<OrderedProduct>
+
+    @ViewComponent
     private lateinit var dataContext: DataContext
 
     @Autowired
     private lateinit var leadValidator: LeadValidator
+
+    @Autowired
+    private lateinit var dialogWindows: DialogWindows
 
     @Subscribe
     private fun onBeforeShow(event: BeforeShowEvent) {
@@ -151,5 +165,32 @@ class LeadDetailView : StandardDetailView<Lead>() {
         // cancelling the system dialog, that asks if the number should be called.
         // We have seen after cancellation of tha dialog, that the tabs of the detail view are not working anymore
         UI.getCurrent().page.executeJs("document.location.href = $0;", "tel:${number}")
+    }
+
+    @Subscribe("orderedProductsDataGrid.copy")
+    private fun onOrderedProductsDataGridCopy(event: ActionPerformedEvent) {
+        val selectedProduct = orderedProductsDataGrid.singleSelectedItem
+        if (selectedProduct == null) {
+            return
+        }
+
+        dialogWindows.detail<OrderedProduct, OrderedProductDetailView>(this, OrderedProduct::class.java)
+            .withViewClass(OrderedProductDetailView::class.java)
+            .newEntity()
+            .withParentDataContext(dataContext)
+            .withInitializer { copy ->
+                copy.copyFrom(selectedProduct)
+            }
+            .withAfterCloseListener { e ->
+                if (e.closedWith(StandardOutcome.SAVE)) {
+                    val copy = e.view.editedEntity
+                    val lead = editedEntity
+                    lead.orderedProducts.add(copy)
+                    copy.lead = lead
+
+                    orderedProductsDc.setItems(lead.orderedProducts)
+                }
+            }
+            .open()
     }
 }

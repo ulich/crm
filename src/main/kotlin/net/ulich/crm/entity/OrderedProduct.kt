@@ -85,4 +85,13 @@ open class OrderedProduct {
     @DeletedDate
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
+
+    fun copyFrom(origin: OrderedProduct) {
+        this.lead = origin.lead
+        this.product = origin.product
+        this.deliveryDate = origin.deliveryDate
+        this.termEndDate = origin.termEndDate
+        this.productAddOn = origin.productAddOn
+    }
+
 }

@@ -17,7 +17,7 @@ class LeadCsvImporterTest {
 
     @BeforeEach
     fun setUp() {
-        `when`(dataManager.create(Lead::class.java)).thenReturn(Lead())
+        `when`(dataManager.create(Lead::class.java)).thenReturn(mock())
     }
 
     @Test

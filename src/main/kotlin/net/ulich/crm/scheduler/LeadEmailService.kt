@@ -14,7 +14,7 @@ class LeadEmailService(
     }
 
     fun sendEmailToLead(emailTemplate: EmailTemplate, lead: Lead) {
-        val toAddress = lead.email!!
+        val toAddress = lead.email
         val subject = emailTemplate.subject!!
         val body = emailTemplate.content!!
         val signature = emailTemplate.signature

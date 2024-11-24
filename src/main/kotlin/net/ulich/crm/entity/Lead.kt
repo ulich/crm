@@ -17,110 +17,110 @@ import java.time.OffsetDateTime
 import java.util.*
 
 @JmixEntity
-@Table(name = "LEAD_", indexes = [
-    Index(name = "IDX_LEAD__CAMPAIGN", columnList = "CAMPAIGN_ID")
-])
+@Table(
+    name = "LEAD_", indexes = [
+        Index(name = "IDX_LEAD__CAMPAIGN", columnList = "CAMPAIGN_ID")
+    ]
+)
 @Entity(name = "Lead")
-open class Lead {
+@Suppress("JmixEntityFieldWithoutAnnotation")
+open class Lead(
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
-    var id: UUID? = null
+    var id: UUID,
 
     @Column(name = "STATUS", nullable = false)
-    @NotNull
-    private var status: String = LeadStatus.NEW.id
+    private var status: String = LeadStatus.NEW.id,
 
     @OrderBy("plannedSendDate ASC")
     @Composition
     @OneToMany(mappedBy = "lead")
-    var scheduledEmails: MutableList<ScheduledEmail> = NotInstantiatedList()
+    var scheduledEmails: MutableList<ScheduledEmail> = NotInstantiatedList(),
 
     @OrderBy("deliveryDate ASC")
     @Composition
     @OneToMany(mappedBy = "lead")
-    var orderedProducts: MutableList<OrderedProduct> = NotInstantiatedList()
+    var orderedProducts: MutableList<OrderedProduct> = NotInstantiatedList(),
 
     @Column(name = "EMAIL", nullable = false, length = 512)
-    @NotNull
-    var email: String? = null
+    var email: String,
 
     @Column(name = "PHONE_NUMBER")
-    var phoneNumber: String? = null
+    var phoneNumber: String? = null,
 
     @Column(name = "ALT_PHONE_NUMBER")
-    var alternativePhoneNumber: String? = null
+    var alternativePhoneNumber: String? = null,
 
     @Column(name = "GENDER", nullable = false)
-    @NotNull
-    private var gender: String? = null
+    private var gender: String,
 
     @Column(name = "COMPANY_NAME", length = 1024)
-    var companyName: String? = null
+    var companyName: String? = null,
 
     @Column(name = "FIRST_NAME", length = 1024)
-    var firstName: String? = null
+    var firstName: String? = null,
 
     @InstanceName
     @Column(name = "LAST_NAME", length = 1024)
-    var lastName: String? = null
+    var lastName: String? = null,
 
     @Column(name = "STREET", length = 1024)
-    var street: String? = null
+    var street: String? = null,
 
     @Column(name = "POST_CODE")
-    var postCode: String? = null
+    var postCode: String? = null,
 
     @Column(name = "CITY", length = 1024)
-    var city: String? = null
+    var city: String? = null,
 
     @Lob
     @Column(name = "NOTES")
-    var notes: String? = null
+    var notes: String? = null,
 
     @JoinColumn(name = "CAMPAIGN_ID", nullable = false)
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var campaign: Campaign? = null
+    var campaign: Campaign,
 
     @Column(name = "VERSION", nullable = false)
     @Version
-    var version: Int? = null
+    var version: Int? = null,
 
     @CreatedBy
     @Column(name = "CREATED_BY")
-    var createdBy: String? = null
+    var createdBy: String? = null,
 
     @CreatedDate
     @Column(name = "CREATED_DATE")
-    var createdDate: OffsetDateTime? = null
+    var createdDate: OffsetDateTime? = null,
 
     @LastModifiedBy
     @Column(name = "LAST_MODIFIED_BY")
-    var lastModifiedBy: String? = null
+    var lastModifiedBy: String? = null,
 
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_DATE")
-    var lastModifiedDate: OffsetDateTime? = null
+    var lastModifiedDate: OffsetDateTime? = null,
 
     @DeletedBy
     @Column(name = "DELETED_BY")
-    var deletedBy: String? = null
+    var deletedBy: String? = null,
 
     @DeletedDate
     @Column(name = "DELETED_DATE")
-    var deletedDate: OffsetDateTime? = null
-
+    var deletedDate: OffsetDateTime? = null,
+) {
     fun getStatus(): LeadStatus? = status.let { LeadStatus.fromId(it) }
 
     fun setStatus(status: LeadStatus) {
         this.status = status.id
     }
 
-    fun getGender(): Gender? = gender?.let { Gender.fromId(it) }
+    fun getGender(): Gender = gender.let { Gender.fromId(it) ?: Gender.UNKNOWN }
 
-    fun setGender(gender: Gender?) {
-        this.gender = gender?.id
+    fun setGender(gender: Gender) {
+        this.gender = gender.id
     }
 
     fun salutation(): String {

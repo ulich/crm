@@ -8,7 +8,6 @@ import io.jmix.core.entity.annotation.JmixGeneratedValue
 import io.jmix.core.entity.annotation.OnDeleteInverse
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotNull
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
@@ -21,51 +20,56 @@ import java.util.*
     Index(name = "IDX_EMAIL_ATTACHMENT_EMAIL_TEMPLATE", columnList = "EMAIL_TEMPLATE_ID")
 ])
 @Entity
-open class EmailAttachment {
+@Suppress("JmixEntityFieldWithoutAnnotation")
+open class EmailAttachment(
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
-    var id: UUID? = null
+    var id: UUID,
 
     @Column(name = "FILE_")
     @Lob
-    var file: FileRef? = null
+    var file: FileRef? = null,
 
     @Column(name = "PERSONALIZED", nullable = false)
-    @NotNull
-    var personalized: Boolean? = false
+    private var _personalized: Boolean,
 
     @CreatedBy
     @Column(name = "CREATED_BY")
-    var createdBy: String? = null
+    var createdBy: String? = null,
 
     @CreatedDate
     @Column(name = "CREATED_DATE")
-    var createdDate: OffsetDateTime? = null
+    var createdDate: OffsetDateTime? = null,
 
     @Column(name = "VERSION", nullable = false)
     @Version
-    var version: Int? = null
+    var version: Int? = null,
 
     @LastModifiedBy
     @Column(name = "LAST_MODIFIED_BY")
-    var lastModifiedBy: String? = null
+    var lastModifiedBy: String? = null,
 
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_DATE")
-    var lastModifiedDate: OffsetDateTime? = null
+    var lastModifiedDate: OffsetDateTime? = null,
 
     @DeletedBy
     @Column(name = "DELETED_BY")
-    var deletedBy: String? = null
+    var deletedBy: String? = null,
 
     @DeletedDate
     @Column(name = "DELETED_DATE")
-    var deletedDate: OffsetDateTime? = null
+    var deletedDate: OffsetDateTime? = null,
 
     @OnDeleteInverse(DeletePolicy.CASCADE)
     @JoinColumn(name = "EMAIL_TEMPLATE_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var emailTemplate: EmailTemplate? = null
-
+    var emailTemplate: EmailTemplate,
+) {
+    var personalized: Boolean
+        get() = _personalized ?: throw IllegalStateException("personalized is not initialized")
+        set(value) {
+            _personalized = value
+        }
 }

@@ -73,12 +73,12 @@ class LeadDetailView : StandardDetailView<Lead>() {
 
         val now = ZonedDateTime.now(berlin)
 
-        lead.campaign?.scheduleItems?.map{ scheduleItem ->
+        lead.campaign.scheduleItems.map { scheduleItem ->
             val scheduled = dataManager.create(ScheduledEmail::class.java).apply {
                 this.lead = lead
                 this.emailTemplate = scheduleItem.emailTemplate
 
-                this.plannedSendDate = calculatePlannedSendDate(now, scheduleItem.day!!, scheduleItem.time)
+                this.plannedSendDate = calculatePlannedSendDate(now, scheduleItem.day, scheduleItem.time)
             }
             dataContext.merge(scheduled)
             lead.scheduledEmails.add(scheduled)

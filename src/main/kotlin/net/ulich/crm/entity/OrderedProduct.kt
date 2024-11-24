@@ -7,7 +7,6 @@ import io.jmix.core.entity.annotation.JmixGeneratedValue
 import io.jmix.core.entity.annotation.OnDeleteInverse
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotNull
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
@@ -25,64 +24,63 @@ import java.util.*
     ]
 )
 @Entity
-open class OrderedProduct {
+@Suppress("JmixEntityFieldWithoutAnnotation")
+open class OrderedProduct(
+
+    @Id
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
-    @Id
-    var id: UUID? = null
+    var id: UUID,
 
     @OnDeleteInverse(DeletePolicy.CASCADE)
     @JoinColumn(name = "LEAD_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var lead: Lead? = null
+    var lead: Lead,
 
     @OnDeleteInverse(DeletePolicy.DENY)
     @JoinColumn(name = "PRODUCT_ID", nullable = false)
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var product: Product? = null
+    var product: Product,
 
     @Column(name = "DELIVERY_DATE", nullable = false)
-    @NotNull
-    var deliveryDate: LocalDate? = LocalDate.now()
+    var deliveryDate: LocalDate,
 
     @Column(name = "TERM_END_DATE")
-    var termEndDate: LocalDate? = null
+    var termEndDate: LocalDate? = null,
 
     @Column(name = "SERIAL_NUMBER", length = 4096)
-    var serialNumber: String? = null
+    var serialNumber: String? = null,
 
     @OnDeleteInverse(DeletePolicy.DENY)
     @JoinColumn(name = "PRODUCT_ADD_ON_ID", nullable = false)
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var productAddOn: ProductAddOn? = null
+    var productAddOn: ProductAddOn,
 
-    @Column(name = "VERSION", nullable = false)
     @Version
-    var version: Int? = null
+    @Column(name = "VERSION", nullable = false)
+    var version: Int? = null,
 
     @CreatedBy
     @Column(name = "CREATED_BY")
-    var createdBy: String? = null
+    var createdBy: String? = null,
 
     @CreatedDate
     @Column(name = "CREATED_DATE")
-    var createdDate: OffsetDateTime? = null
+    var createdDate: OffsetDateTime? = null,
 
     @LastModifiedBy
     @Column(name = "LAST_MODIFIED_BY")
-    var lastModifiedBy: String? = null
+    var lastModifiedBy: String? = null,
 
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_DATE")
-    var lastModifiedDate: OffsetDateTime? = null
+    var lastModifiedDate: OffsetDateTime? = null,
 
     @DeletedBy
     @Column(name = "DELETED_BY")
-    var deletedBy: String? = null
+    var deletedBy: String? = null,
 
     @DeletedDate
     @Column(name = "DELETED_DATE")
-    var deletedDate: OffsetDateTime? = null
-}
+    var deletedDate: OffsetDateTime? = null,
+)

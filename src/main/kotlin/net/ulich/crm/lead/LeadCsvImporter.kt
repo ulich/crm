@@ -56,7 +56,7 @@ class LeadCsvImporter(private val dataManager: DataManager) {
             street = data.remove("Straße")
             postCode = data.remove("PLZ")
             city = data.remove("Stadt")
-            email = data.remove("E-Mail")
+            email = data.remove("E-Mail") ?: ""
             phoneNumber =
                 data.remove("Telefon") ?: data.remove("Rufnummer") ?: data.remove("Mobil") ?: data.remove("Handy")
                         ?: data.remove("Mobiltelefon")
@@ -78,13 +78,10 @@ class LeadCsvImporter(private val dataManager: DataManager) {
             .build()
     }
 
-    private fun toGender(data: MutableMap<String, String>): Gender? {
+    private fun toGender(data: MutableMap<String, String>): Gender {
         val str = data.get("Anrede")
-        if (str == null) {
-            return null
-        }
 
-        val gender = when (str.uppercase()) {
+        val gender = when (str?.uppercase()) {
             "HERR" -> Gender.MR
             "FRAU" -> Gender.MRS
             else -> null
@@ -94,6 +91,6 @@ class LeadCsvImporter(private val dataManager: DataManager) {
             data.remove("Anrede")
         }
 
-        return gender
+        return gender ?: Gender.UNKNOWN
     }
 }

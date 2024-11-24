@@ -18,44 +18,46 @@ import java.util.*
 @Table(name = "USER_", indexes = [
     Index(name = "IDX_USER__ON_USERNAME", columnList = "USERNAME", unique = true)
 ])
-open class User : JmixUserDetails, HasTimeZone {
+@Suppress("JmixEntityFieldWithoutAnnotation")
+open class User(
 
     @Id
     @Column(name = "ID", nullable = false)
     @JmixGeneratedValue
-    var id: UUID? = null
+    var id: UUID,
 
     @Version
     @Column(name = "VERSION", nullable = false)
-    var version: Int? = null
+    var version: Int? = null,
 
     @Column(name = "USERNAME", nullable = false)
     @get:JvmName("getUsername_")
-    var username: String? = null
+    var username: String,
 
     @Secret
     @SystemLevel
     @Column(name = "PASSWORD")
     @get:JvmName("getPassword_")
-    var password: String? = null
+    var password: String? = null,
 
     @Column(name = "FIRST_NAME")
-    var firstName: String? = null
+    var firstName: String? = null,
 
     @Column(name = "LAST_NAME")
-    var lastName: String? = null
+    var lastName: String? = null,
 
     @Email
     @Column(name = "EMAIL")
-    var email: String? = null
+    var email: String? = null,
 
     @Column(name = "ACTIVE")
-    var active: Boolean? = true
+    var active: Boolean? = true,
 
     @Column(name = "TIME_ZONE_ID")
     @get:JvmName("getTimeZoneId_")
-    var timeZoneId: String? = null
+    var timeZoneId: String? = null,
 
+    ) : JmixUserDetails, HasTimeZone {
     @Transient
     protected var userAuthorities: Collection<GrantedAuthority?>? = null
 

@@ -6,21 +6,19 @@ import io.jmix.core.SaveContext
 import io.jmix.core.event.EntityChangedEvent
 import net.ulich.crm.entity.Lead
 import net.ulich.crm.entity.OrderedProduct
-import net.ulich.crm.entity.ScheduledEmail
 import net.ulich.crm.entity.ScheduledEmailSourceType
-import net.ulich.crm.time.AppTimeZone.Companion.BERLIN
+import net.ulich.crm.scheduler.LeadEmailService
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
-import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
 import java.util.stream.Collectors.groupingBy
 import java.util.stream.Collectors.toSet
 
 
 @Component
 open class OrderedProductChangeListener(
-    private val dataManager: DataManager
+    private val dataManager: DataManager,
+    private val leadEmailService: LeadEmailService
 ) {
 
     @EventListener
@@ -78,15 +76,7 @@ open class OrderedProductChangeListener(
                 .collect(toSet())
 
             recurringEmails.forEach { recurringEmail ->
-                val scheduledSendDate = deliveryDate!!.plus(recurringEmail.intervalMonths!!.toLong(), ChronoUnit.MONTHS)
-                val scheduledSendDateTime = ZonedDateTime.of(scheduledSendDate, recurringEmail.getLocalTime(), BERLIN)
-
-                val scheduled = dataManager.create(ScheduledEmail::class.java).apply {
-                    this.lead = lead
-                    this.emailTemplate = recurringEmail.emailTemplate
-                    this.plannedSendDate = scheduledSendDateTime.toOffsetDateTime()
-                    this.setSourceType(ScheduledEmailSourceType.PRODUCT_ADD_ON_REMINDER)
-                }
+                val scheduled = leadEmailService.createRecurringEmail(lead, recurringEmail, deliveryDate!!)
                 saveContext.saving(scheduled)
             }
         }

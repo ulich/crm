@@ -119,6 +119,7 @@
                 <columns resizable="true">
                     <column property="plannedSendDate" sortable="true"/>
                     <column property="emailTemplate.name"/>
+                    <column property="recurringEmail.intervalMonths"/>
                     <column property="sentDate"/>
                 </columns>
             </dataGrid>

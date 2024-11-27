@@ -10,14 +10,14 @@ import io.jmix.core.metamodel.annotation.InstanceName
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
+import net.ulich.crm.time.AppTimeZone.Companion.BERLIN
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.OffsetDateTime
+import java.time.*
 import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @JmixEntity
@@ -80,5 +80,10 @@ open class RecurringEmail {
 
     fun getLocalTime(): LocalTime {
         return LocalDateTime.ofInstant(time!!.toInstant(), UTC).toLocalTime()
+    }
+
+    fun calculateNextOcurrenceFrom(fromDate: LocalDate): ZonedDateTime {
+        val scheduledSendDate = fromDate.plus(intervalMonths!!.toLong(), ChronoUnit.MONTHS)
+        return ZonedDateTime.of(scheduledSendDate, getLocalTime(), BERLIN)
     }
 }

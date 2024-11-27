@@ -4,7 +4,9 @@ import io.jmix.core.DeletePolicy
 import io.jmix.core.annotation.DeletedBy
 import io.jmix.core.annotation.DeletedDate
 import io.jmix.core.entity.annotation.JmixGeneratedValue
+import io.jmix.core.entity.annotation.OnDelete
 import io.jmix.core.entity.annotation.OnDeleteInverse
+import io.jmix.core.metamodel.annotation.InstanceName
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
@@ -12,42 +14,36 @@ import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.OffsetDateTime
+import java.time.ZoneOffset.UTC
 import java.util.*
 
 @JmixEntity
-@Table(name = "SCHEDULED_EMAIL", indexes = [
-    Index(name = "IDX_SCHEDULED_EMAIL_LEAD", columnList = "LEAD_ID"),
-    Index(name = "IDX_SCHEDULED_EMAIL_EMAIL_TEMPLATE", columnList = "EMAIL_TEMPLATE_ID")
-])
+@Table(name = "RECURRING_EMAIL")
 @Entity
-open class ScheduledEmail {
+open class RecurringEmail {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
     var id: UUID? = null
 
-    @OnDeleteInverse(DeletePolicy.CASCADE)
-    @JoinColumn(name = "LEAD_ID", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var lead: Lead? = null
-
     @OnDeleteInverse(DeletePolicy.DENY)
+    @OnDelete(DeletePolicy.UNLINK)
     @JoinColumn(name = "EMAIL_TEMPLATE_ID", nullable = false)
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @NotNull
     var emailTemplate: EmailTemplate? = null
 
-    @Column(name = "PLANNED_SEND_DATE", nullable = false)
+    @Column(name = "INTERVAL_MONTHS", nullable = false)
     @NotNull
-    var plannedSendDate: OffsetDateTime? = null
+    var intervalMonths: Int? = null
 
-    @Column(name = "SENT_DATE")
-    var sentDate: OffsetDateTime? = null
-
-    @Column(name = "SOURCE_TYPE", nullable = false)
+    @Column(name = "TIME_", nullable = false)
+    @Temporal(TemporalType.TIME)
     @NotNull
-    private var sourceType: String? = null
+    var time: Date? = null
 
     @Column(name = "VERSION", nullable = false)
     @Version
@@ -77,9 +73,12 @@ open class ScheduledEmail {
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
 
-    fun getSourceType(): ScheduledEmailSourceType? = sourceType.let { ScheduledEmailSourceType.fromId(it) }
+    @InstanceName
+    fun instanceName(): String {
+        return emailTemplate!!.name + " (" + intervalMonths + "M)"
+    }
 
-    fun setSourceType(sourceType: ScheduledEmailSourceType) {
-        this.sourceType = sourceType.id
+    fun getLocalTime(): LocalTime {
+        return LocalDateTime.ofInstant(time!!.toInstant(), UTC).toLocalTime()
     }
 }

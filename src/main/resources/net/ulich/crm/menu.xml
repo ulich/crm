@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
 
-    <item view="EmailTemplate.list"
-          title="msg://net.ulich.crm.view.emailtemplate/emailTemplateListView.title"/>
+    <item view="Lead.list" title="msg://net.ulich.crm.view.lead/leadListView.title"/>
+    <item view="EmailTemplate.list" title="msg://net.ulich.crm.view.emailtemplate/emailTemplateListView.title"/>
     <item view="EmailSignature.list" title="msg://net.ulich.crm.view.emailsignature/emailSignatureListView.title"/>
     <item view="Campaign.list" title="msg://net.ulich.crm.view.campaign/campaignListView.title"/>
+    <item view="RecurringEmail.list" title="msg://net.ulich.crm.view.recurringemail/recurringEmailListView.title"/>
     <item view="Product.list" title="msg://net.ulich.crm.view.product/productListView.title"/>
     <item view="ProductAddOn.list" title="msg://net.ulich.crm.view.productaddon/productAddOnListView.title"/>
-    <item view="Lead.list" title="msg://net.ulich.crm.view.lead/leadListView.title"/>
+
     <menu opened="true" id="application" title="msg://net.ulich.crm/menu.application.title">
         <item view="User.list" title="msg://net.ulich.crm.view.user/UserListView.title"/>
     </menu>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      title="msg://productAddOnListView.title"
-      focusComponent="productAddOnsDataGrid">
+      title="msg://recurringEmailListView.title"
+      focusComponent="recurringEmailsDataGrid">
     <data>
-        <collection id="productAddOnsDc"
-                    class="net.ulich.crm.entity.ProductAddOn">
+        <collection id="recurringEmailsDc"
+                    class="net.ulich.crm.entity.RecurringEmail">
             <fetchPlan extends="_base">
-                <property name="recurringEmail" fetch="JOIN" fetchPlan="_base"/>
+                <property name="emailTemplate" fetchPlan="_base"/>
             </fetchPlan>
-            <loader id="productAddOnsDl" readOnly="true">
+            <loader id="recurringEmailsDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from ProductAddOn e order by e.name]]>
+                    <![CDATA[select e from RecurringEmail e]]>
                 </query>
             </loader>
         </collection>
@@ -28,19 +28,19 @@
     </actions>
     <layout>
         <genericFilter id="genericFilter"
-                       dataLoader="productAddOnsDl">
+                       dataLoader="recurringEmailsDl">
             <properties include=".*"/>
         </genericFilter>
         <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button id="createBtn" action="productAddOnsDataGrid.create"/>
-            <button id="editBtn" action="productAddOnsDataGrid.edit"/>
-            <button id="removeBtn" action="productAddOnsDataGrid.remove"/>
-            <simplePagination id="pagination" dataLoader="productAddOnsDl"/>
+            <button id="createBtn" action="recurringEmailsDataGrid.create"/>
+            <button id="editBtn" action="recurringEmailsDataGrid.edit"/>
+            <button id="removeBtn" action="recurringEmailsDataGrid.remove"/>
+            <simplePagination id="pagination" dataLoader="recurringEmailsDl"/>
         </hbox>
-        <dataGrid id="productAddOnsDataGrid"
+        <dataGrid id="recurringEmailsDataGrid"
                   width="100%"
                   minHeight="20em"
-                  dataContainer="productAddOnsDc"
+                  dataContainer="recurringEmailsDc"
                   columnReorderingAllowed="true">
             <actions>
                 <action id="create" type="list_create"/>
@@ -48,8 +48,8 @@
                 <action id="remove" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="name"/>
-                <column property="recurringEmail"/>
+                <column property="emailTemplate"/>
+                <column property="intervalMonths"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

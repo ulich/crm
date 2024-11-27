@@ -14,10 +14,8 @@ import io.jmix.flowui.kit.component.button.JmixButton
 import io.jmix.flowui.model.CollectionPropertyContainer
 import io.jmix.flowui.model.DataContext
 import io.jmix.flowui.view.*
-import net.ulich.crm.entity.Campaign
-import net.ulich.crm.entity.Lead
-import net.ulich.crm.entity.OrderedProduct
-import net.ulich.crm.entity.ScheduledEmail
+import net.ulich.crm.entity.*
+import net.ulich.crm.time.AppTimeZone
 import net.ulich.crm.view.main.MainView
 import net.ulich.crm.view.orderedproduct.OrderedProductDetailView
 import org.springframework.beans.factory.annotation.Autowired
@@ -85,12 +83,13 @@ class LeadDetailView : StandardDetailView<Lead>() {
         val lead = editedEntity
         lead.scheduledEmails.clear()
 
-        val now = ZonedDateTime.now(berlin)
+        val now = ZonedDateTime.now(AppTimeZone.BERLIN)
 
         lead.campaign?.scheduleItems?.map{ scheduleItem ->
             val scheduled = dataManager.create(ScheduledEmail::class.java).apply {
                 this.lead = lead
                 this.emailTemplate = scheduleItem.emailTemplate
+                this.setSourceType(ScheduledEmailSourceType.CAMPAIGN)
 
                 this.plannedSendDate = calculatePlannedSendDate(now, scheduleItem.day!!, scheduleItem.time)
             }
@@ -116,8 +115,6 @@ class LeadDetailView : StandardDetailView<Lead>() {
     }
 
     companion object {
-        private val berlin = ZoneId.of("Europe/Berlin")
-
         fun calculatePlannedSendDate(now: ZonedDateTime, day: Int, time: Date?): OffsetDateTime {
             if (time == null) {
                 return now.plusMinutes(5).toOffsetDateTime()
@@ -128,7 +125,7 @@ class LeadDetailView : StandardDetailView<Lead>() {
             val date = if (day == 1) now else now.with(addBusinessDays.apply(day - 1))
             return date.toLocalDate()
                     .atTime(localTime)
-                    .atZone(berlin)
+                .atZone(AppTimeZone.BERLIN)
                     .toOffsetDateTime()
         }
 

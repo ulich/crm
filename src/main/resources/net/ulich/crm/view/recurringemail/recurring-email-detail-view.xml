@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      title="msg://productAddOnDetailView.title"
+      title="msg://recurringEmailDetailView.title"
       focusComponent="form">
     <data>
-        <instance id="productAddOnsDc"
-                  class="net.ulich.crm.entity.ProductAddOn">
+        <instance id="recurringEmailDc"
+                  class="net.ulich.crm.entity.RecurringEmail">
             <fetchPlan extends="_base">
-                <property name="recurringEmail" fetchPlan="_base"/>
+                <property name="emailTemplate" fetchPlan="_base"/>
             </fetchPlan>
-            <loader/>
+            <loader id="recurringEmailDl"/>
         </instance>
     </data>
     <facets>
@@ -19,14 +19,15 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="productAddOnsDc">
-            <textField id="nameField" property="name"/>
-            <entityPicker id="recurringEmailField" property="recurringEmail">
+        <formLayout id="form" dataContainer="recurringEmailDc">
+            <entityPicker id="emailTemplateField" property="emailTemplate" colspan="2">
                 <actions>
                     <action id="entityLookup" type="entity_lookup"/>
                     <action id="entityClear" type="entity_clear"/>
                 </actions>
             </entityPicker>
+            <textField id="intervalMonthsField" property="intervalMonths"/>
+            <timePicker id="timeField" property="time"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>

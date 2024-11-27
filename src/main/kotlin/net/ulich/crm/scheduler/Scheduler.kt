@@ -6,6 +6,7 @@ import io.jmix.core.security.SystemAuthenticator
 import net.ulich.crm.entity.ScheduledEmail
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.concurrent.TimeUnit
 
@@ -40,6 +41,12 @@ class Scheduler(
 
     private fun handleEmail(email: ScheduledEmail) {
         leadEmailService.sendEmailToLead(email.emailTemplate!!, email.lead!!)
+
+        if (email.recurringEmail != null) {
+            val newScheduledEmail =
+                leadEmailService.createRecurringEmail(email.lead!!, email.recurringEmail!!, LocalDate.now())
+            dataManager.save(newScheduledEmail)
+        }
 
         dataManager.save(email.apply {
             this.sentDate = OffsetDateTime.now()

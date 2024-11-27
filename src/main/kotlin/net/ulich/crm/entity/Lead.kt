@@ -31,7 +31,7 @@ open class Lead {
     @NotNull
     private var status: String = LeadStatus.NEW.id
 
-    @OrderBy("plannedSendDate ASC")
+    @OrderBy("plannedSendDate DESC")
     @Composition
     @OneToMany(mappedBy = "lead")
     var scheduledEmails: MutableList<ScheduledEmail> = NotInstantiatedList()

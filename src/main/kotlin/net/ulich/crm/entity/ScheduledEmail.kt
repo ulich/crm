@@ -4,6 +4,7 @@ import io.jmix.core.DeletePolicy
 import io.jmix.core.annotation.DeletedBy
 import io.jmix.core.annotation.DeletedDate
 import io.jmix.core.entity.annotation.JmixGeneratedValue
+import io.jmix.core.entity.annotation.OnDelete
 import io.jmix.core.entity.annotation.OnDeleteInverse
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
@@ -45,6 +46,16 @@ open class ScheduledEmail {
     @Column(name = "SENT_DATE")
     var sentDate: OffsetDateTime? = null
 
+    @Column(name = "SOURCE_TYPE", nullable = false)
+    @NotNull
+    private var sourceType: String? = null
+
+    @OnDeleteInverse(DeletePolicy.DENY)
+    @OnDelete(DeletePolicy.UNLINK)
+    @JoinColumn(name = "RECURRING_EMAIL_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    var recurringEmail: RecurringEmail? = null
+
     @Column(name = "VERSION", nullable = false)
     @Version
     var version: Int? = null
@@ -72,4 +83,10 @@ open class ScheduledEmail {
     @DeletedDate
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
+
+    fun getSourceType(): ScheduledEmailSourceType? = sourceType.let { ScheduledEmailSourceType.fromId(it) }
+
+    fun setSourceType(sourceType: ScheduledEmailSourceType) {
+        this.sourceType = sourceType.id
+    }
 }

@@ -117,8 +117,9 @@
                     <action id="remove" type="list_remove"/>
                 </actions>
                 <columns resizable="true">
-                    <column property="plannedSendDate"/>
-                    <column property="emailTemplate.subject"/>
+                    <column property="plannedSendDate" sortable="true"/>
+                    <column property="emailTemplate.name"/>
+                    <column property="recurringEmail.intervalMonths"/>
                     <column property="sentDate"/>
                 </columns>
             </dataGrid>

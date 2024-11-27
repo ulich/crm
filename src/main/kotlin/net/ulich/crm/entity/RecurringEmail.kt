@@ -10,32 +10,40 @@ import io.jmix.core.metamodel.annotation.InstanceName
 import io.jmix.core.metamodel.annotation.JmixEntity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
+import net.ulich.crm.time.AppTimeZone.Companion.BERLIN
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
-import java.time.OffsetDateTime
+import java.time.*
+import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @JmixEntity
-@Table(name = "PRODUCT_ADD_ON")
+@Table(name = "RECURRING_EMAIL")
 @Entity
-open class ProductAddOn {
+open class RecurringEmail {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
     var id: UUID? = null
 
-    @InstanceName
-    @Column(name = "NAME", nullable = false, length = 1024)
-    @NotNull
-    var name: String? = null
-
     @OnDeleteInverse(DeletePolicy.DENY)
     @OnDelete(DeletePolicy.UNLINK)
-    @JoinColumn(name = "RECURRING_EMAIL_ID")
-    @ManyToOne(fetch = FetchType.LAZY)
-    var recurringEmail: RecurringEmail? = null
+    @JoinColumn(name = "EMAIL_TEMPLATE_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @NotNull
+    var emailTemplate: EmailTemplate? = null
+
+    @Column(name = "INTERVAL_MONTHS", nullable = false)
+    @NotNull
+    var intervalMonths: Int? = null
+
+    @Column(name = "TIME_", nullable = false)
+    @Temporal(TemporalType.TIME)
+    @NotNull
+    var time: Date? = null
 
     @Column(name = "VERSION", nullable = false)
     @Version
@@ -65,4 +73,17 @@ open class ProductAddOn {
     @Column(name = "DELETED_DATE")
     var deletedDate: OffsetDateTime? = null
 
+    @InstanceName
+    fun instanceName(): String {
+        return emailTemplate!!.name + " (" + intervalMonths + "M)"
+    }
+
+    fun getLocalTime(): LocalTime {
+        return LocalDateTime.ofInstant(time!!.toInstant(), UTC).toLocalTime()
+    }
+
+    fun calculateNextOcurrenceFrom(fromDate: LocalDate): ZonedDateTime {
+        val scheduledSendDate = fromDate.plus(intervalMonths!!.toLong(), ChronoUnit.MONTHS)
+        return ZonedDateTime.of(scheduledSendDate, getLocalTime(), BERLIN)
+    }
 }

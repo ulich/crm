@@ -11,13 +11,14 @@ import io.jmix.flowui.component.combobox.EntityComboBox
 import io.jmix.flowui.component.grid.DataGrid
 import io.jmix.flowui.kit.action.ActionPerformedEvent
 import io.jmix.flowui.kit.component.button.JmixButton
+import io.jmix.flowui.model.CollectionChangeType
+import io.jmix.flowui.model.CollectionContainer
 import io.jmix.flowui.model.CollectionPropertyContainer
 import io.jmix.flowui.model.DataContext
 import io.jmix.flowui.view.*
-import net.ulich.crm.entity.Campaign
-import net.ulich.crm.entity.Lead
-import net.ulich.crm.entity.OrderedProduct
-import net.ulich.crm.entity.ScheduledEmail
+import net.ulich.crm.entity.*
+import net.ulich.crm.productaddon.ProductAddOnReminderService
+import net.ulich.crm.time.AppTimeZone
 import net.ulich.crm.view.main.MainView
 import net.ulich.crm.view.orderedproduct.OrderedProductDetailView
 import org.springframework.beans.factory.annotation.Autowired
@@ -61,6 +62,14 @@ class LeadDetailView : StandardDetailView<Lead>() {
     @Autowired
     private lateinit var dialogWindows: DialogWindows
 
+    @Autowired
+    private lateinit var productAddOnReminderService: ProductAddOnReminderService
+
+    @Subscribe
+    private fun onInit(event: InitEvent) {
+        orderedProductsDc.addCollectionChangeListener(this::onOrderedProductsChanged)
+    }
+
     @Subscribe
     private fun onBeforeShow(event: BeforeShowEvent) {
         campaignField.isEnabled = entityStates.isNew(editedEntity)
@@ -85,12 +94,13 @@ class LeadDetailView : StandardDetailView<Lead>() {
         val lead = editedEntity
         lead.scheduledEmails.clear()
 
-        val now = ZonedDateTime.now(berlin)
+        val now = ZonedDateTime.now(AppTimeZone.BERLIN)
 
         lead.campaign?.scheduleItems?.map{ scheduleItem ->
             val scheduled = dataManager.create(ScheduledEmail::class.java).apply {
                 this.lead = lead
                 this.emailTemplate = scheduleItem.emailTemplate
+                this.setSourceType(ScheduledEmailSourceType.CAMPAIGN)
 
                 this.plannedSendDate = calculatePlannedSendDate(now, scheduleItem.day!!, scheduleItem.time)
             }
@@ -98,7 +108,7 @@ class LeadDetailView : StandardDetailView<Lead>() {
             lead.scheduledEmails.add(scheduled)
         }
 
-        scheduledEmailsDc.setItems(lead.scheduledEmails.sortedBy { it.plannedSendDate })
+        scheduledEmailsDc.setItems(lead.scheduledEmails.sortedByDescending { it.plannedSendDate })
     }
 
     fun prefillWith(lead: Lead) {
@@ -116,8 +126,6 @@ class LeadDetailView : StandardDetailView<Lead>() {
     }
 
     companion object {
-        private val berlin = ZoneId.of("Europe/Berlin")
-
         fun calculatePlannedSendDate(now: ZonedDateTime, day: Int, time: Date?): OffsetDateTime {
             if (time == null) {
                 return now.plusMinutes(5).toOffsetDateTime()
@@ -128,7 +136,7 @@ class LeadDetailView : StandardDetailView<Lead>() {
             val date = if (day == 1) now else now.with(addBusinessDays.apply(day - 1))
             return date.toLocalDate()
                     .atTime(localTime)
-                    .atZone(berlin)
+                .atZone(AppTimeZone.BERLIN)
                     .toOffsetDateTime()
         }
 
@@ -192,5 +200,14 @@ class LeadDetailView : StandardDetailView<Lead>() {
                 }
             }
             .open()
+    }
+
+    private fun onOrderedProductsChanged(event: CollectionContainer.CollectionChangeEvent<OrderedProduct>) {
+        if (event.changeType == CollectionChangeType.REFRESH) {
+            return
+        }
+
+        productAddOnReminderService.replaceReminderEmails(editedEntity, dataContext)
+        scheduledEmailsDc.setItems(editedEntity.scheduledEmails.sortedByDescending { it.plannedSendDate })
     }
 }

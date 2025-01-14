@@ -42,6 +42,10 @@ open class OrderedProduct {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     var product: Product? = null
 
+    @Column(name = "PURCHASE_DATE", nullable = false)
+    @NotNull
+    var purchaseDate: LocalDate? = LocalDate.now()
+
     @Column(name = "DELIVERY_DATE", nullable = false)
     @NotNull
     var deliveryDate: LocalDate? = LocalDate.now()
@@ -89,6 +93,7 @@ open class OrderedProduct {
     fun copyFrom(origin: OrderedProduct) {
         this.lead = origin.lead
         this.product = origin.product
+        this.purchaseDate = origin.purchaseDate
         this.deliveryDate = origin.deliveryDate
         this.termEndDate = origin.termEndDate
         this.productAddOn = origin.productAddOn

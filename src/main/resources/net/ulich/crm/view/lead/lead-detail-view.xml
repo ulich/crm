@@ -93,6 +93,7 @@
                     <action id="copy" icon="COPY" text="msg://copy" type="list_itemTracking"/>
                 </actions>
                 <columns resizable="true">
+                    <column property="purchaseDate"/>
                     <column property="deliveryDate"/>
                     <column property="product"/>
                     <column property="productAddOn"/>

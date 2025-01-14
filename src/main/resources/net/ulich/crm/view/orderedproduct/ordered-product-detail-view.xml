@@ -37,6 +37,7 @@
         <formLayout id="form" dataContainer="orderedProductDc">
             <entityComboBox id="productField" property="product" itemsContainer="productsDc"/>
             <entityComboBox id="productAddOnField" property="productAddOn" itemsContainer="productAddOnsDc"/>
+            <datePicker id="purchaseDateField" property="purchaseDate"/>
             <datePicker id="deliveryDateField" property="deliveryDate"/>
             <datePicker id="termEndDateField" property="termEndDate"/>
             <textField id="serialNumberField" property="serialNumber"/>

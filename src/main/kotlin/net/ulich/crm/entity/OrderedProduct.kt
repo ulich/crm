@@ -21,7 +21,6 @@ import java.util.*
     name = "ORDERED_PRODUCT", indexes = [
         Index(name = "IDX_ORDERED_PRODUCT_LEAD", columnList = "LEAD_ID"),
         Index(name = "IDX_ORDERED_PRODUCT_PRODUCT", columnList = "PRODUCT_ID"),
-        Index(name = "IDX_ORDERED_PRODUCT_PRODUCT_ADD_ON", columnList = "PRODUCT_ADD_ON_ID")
     ]
 )
 @Entity
@@ -57,10 +56,13 @@ open class OrderedProduct {
     var serialNumber: String? = null
 
     @OnDeleteInverse(DeletePolicy.DENY)
-    @JoinColumn(name = "PRODUCT_ADD_ON_ID", nullable = false)
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    var productAddOn: ProductAddOn? = null
+    @JoinTable(
+        name = "ORDERED_PRODUCT_ADD_ONS",
+        joinColumns = [JoinColumn(name = "ORDERED_PRODUCT_ID")],
+        inverseJoinColumns = [JoinColumn(name = "ADD_ON_ID")]
+    )
+    @ManyToMany
+    var productAddOns: List<ProductAddOn> = ArrayList()
 
     @Column(name = "VERSION", nullable = false)
     @Version
@@ -96,7 +98,7 @@ open class OrderedProduct {
         this.purchaseDate = origin.purchaseDate
         this.deliveryDate = origin.deliveryDate
         this.termEndDate = origin.termEndDate
-        this.productAddOn = origin.productAddOn
+        this.productAddOns = origin.productAddOns
     }
 
 }

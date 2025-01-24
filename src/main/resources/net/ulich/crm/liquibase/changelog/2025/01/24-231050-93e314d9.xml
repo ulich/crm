@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="crm">
+        <createTable tableName="ORDERED_PRODUCT_ADD_ONS">
+            <column name="ORDERED_PRODUCT_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADD_ON_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="ORDERED_PRODUCT_ID" baseTableName="ORDERED_PRODUCT_ADD_ONS"
+                                 constraintName="FK_ORDERED_PRODUCT_ADD_ONS_ON_ORDERED_PRODUCT"
+                                 referencedColumnNames="ID"
+                                 referencedTableName="ORDERED_PRODUCT"/>
+        <createIndex tableName="ORDERED_PRODUCT_ADD_ONS" indexName="IDX_ORDERED_PRODUCT_ADD_ONS_ORDERED_PRODUCT_ID">
+            <column name="ORDERED_PRODUCT_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="ADD_ON_ID" baseTableName="ORDERED_PRODUCT_ADD_ONS"
+                                 constraintName="FK_ORDERED_PRODUCT_ADD_ONS_ON_PRODUCT_ADD_ON"
+                                 referencedColumnNames="ID"
+                                 referencedTableName="PRODUCT_ADD_ON"/>
+        <createIndex tableName="ORDERED_PRODUCT_ADD_ONS" indexName="IDX_ORDERED_PRODUCT_ADD_ONS_ADD_ON_ID">
+            <column name="ADD_ON_ID"/>
+        </createIndex>
+
+        <sql>
+            INSERT INTO ORDERED_PRODUCT_ADD_ONS (ORDERED_PRODUCT_ID, ADD_ON_ID)
+            SELECT ID AS ORDERED_PRODUCT_ID, PRODUCT_ADD_ON_ID AS ADD_ON_ID
+            FROM ORDERED_PRODUCT;
+        </sql>
+
+        <dropColumn tableName="ORDERED_PRODUCT" columnName="PRODUCT_ADD_ON_ID"/>
+    </changeSet>
+</databaseChangeLog>

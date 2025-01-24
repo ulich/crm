@@ -6,6 +6,10 @@
         <instance id="orderedProductDc"
                   class="net.ulich.crm.entity.OrderedProduct">
             <loader/>
+            <fetchPlan extends="_base">
+                <property name="product" fetchPlan="_base"/>
+                <property name="productAddOns" fetchPlan="_base"/>
+            </fetchPlan>
         </instance>
         <collection class="net.ulich.crm.entity.Product"
                     id="productsDc">
@@ -36,7 +40,7 @@
     <layout>
         <formLayout id="form" dataContainer="orderedProductDc">
             <entityComboBox id="productField" property="product" itemsContainer="productsDc"/>
-            <entityComboBox id="productAddOnField" property="productAddOn" itemsContainer="productAddOnsDc"/>
+            <multiSelectComboBox id="productAddOnsField" property="productAddOns" itemsContainer="productAddOnsDc"/>
             <datePicker id="purchaseDateField" property="purchaseDate"/>
             <datePicker id="deliveryDateField" property="deliveryDate"/>
             <datePicker id="termEndDateField" property="termEndDate"/>

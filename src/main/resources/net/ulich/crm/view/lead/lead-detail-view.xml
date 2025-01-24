@@ -11,6 +11,7 @@
                 </property>
                 <property name="orderedProducts" fetchPlan="_base">
                     <property name="product" fetch="JOIN" fetchPlan="_base"/>
+                    <property name="productAddOns" fetch="JOIN" fetchPlan="_base"/>
                 </property>
             </fetchPlan>
             <loader/>
@@ -96,7 +97,7 @@
                     <column property="purchaseDate"/>
                     <column property="deliveryDate"/>
                     <column property="product"/>
-                    <column property="productAddOn"/>
+                    <column property="productAddOns"/>
                     <column property="serialNumber"/>
                     <column property="termEndDate"/>
                 </columns>

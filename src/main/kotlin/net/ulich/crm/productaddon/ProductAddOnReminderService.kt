@@ -25,16 +25,17 @@ open class ProductAddOnReminderService(
         mailsToRemove.forEach(dataContext::remove)
 
         val orderedProductsByDeliveryDate = lead.orderedProducts.stream()
-            .filter { p -> p.productAddOn?.recurringEmail != null }
+            .filter { p -> p.productAddOns.any { it.recurringEmail != null } }
             .collect(groupingBy { p -> p.deliveryDate })
 
         orderedProductsByDeliveryDate.forEach { deliveryDate, products ->
             val recurringEmails = products.stream()
-                .map { p -> p.productAddOn!!.recurringEmail!! }
+                .flatMap { p -> p.productAddOns.map { it.recurringEmail }.stream() }
+                .filter { r -> r != null }
                 .collect(toSet())
 
             recurringEmails.forEach { recurringEmail ->
-                val scheduled = leadEmailService.createRecurringEmail(lead, recurringEmail, deliveryDate!!)
+                val scheduled = leadEmailService.createRecurringEmail(lead, recurringEmail!!, deliveryDate!!)
                 dataContext.merge(scheduled)
                 lead.scheduledEmails.add(scheduled)
             }

@@ -6,7 +6,7 @@ import io.jmix.core.DataManager
 import java.math.BigDecimal
 import java.time.YearMonth
 
-class LeadsByTimeChart(val dataManager: DataManager) {
+class OrderedProductsByTimeChart(val dataManager: DataManager) {
 
     fun init(byMonthChart: Chart, byYearChart: Chart) {
         val rowsFromDb = load()
@@ -38,9 +38,9 @@ class LeadsByTimeChart(val dataManager: DataManager) {
     private fun load(): List<Row> {
         val items = dataManager.loadValues(
             """
-                select extract(year from e.createdDate), extract(month from e.createdDate), count(e)
-                from Lead e
-                group by extract(year from e.createdDate), extract(month from e.createdDate)"""
+                select extract(year from e.purchaseDate), extract(month from e.purchaseDate), count(e)
+                from OrderedProduct e
+                group by extract(year from e.purchaseDate), extract(month from e.purchaseDate)"""
         )
             .properties("year", "month", "count")
             .list()

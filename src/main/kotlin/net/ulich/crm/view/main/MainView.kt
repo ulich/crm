@@ -21,10 +21,10 @@ open class MainView : StandardMainView() {
     private lateinit var leadsByStatusChart: Chart
 
     @ViewComponent
-    private lateinit var leadsByMonthChart: Chart
+    private lateinit var orderedProductsByMonthChart: Chart
 
     @ViewComponent
-    private lateinit var leadsByYearChart: Chart
+    private lateinit var orderedProductsByYearChart: Chart
 
     @Autowired
     private lateinit var dataManager: DataManager
@@ -35,6 +35,6 @@ open class MainView : StandardMainView() {
     @Subscribe
     private fun onInit(event: InitEvent) {
         LeadStatusChart(dataManager, messages).init(leadsByStatusChart)
-        LeadsByTimeChart(dataManager).init(leadsByMonthChart, leadsByYearChart)
+        OrderedProductsByTimeChart(dataManager).init(orderedProductsByMonthChart, orderedProductsByYearChart)
     }
 }

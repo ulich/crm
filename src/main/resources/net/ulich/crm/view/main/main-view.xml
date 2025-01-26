@@ -35,15 +35,30 @@
             </section>
         </drawerLayout>
         <initialLayout>
-            <charts:chart id="leadsChart" width="100%" height="400px">
-                <charts:title text="Leads"/>
-                <charts:tooltip trigger="ITEM"/>
-                <charts:series>
-                    <charts:pie>
-                        <charts:label/>
-                    </charts:pie>
-                </charts:series>
-            </charts:chart>
+            <vbox>
+                <charts:chart id="leadsByStatusChart" width="100%" height="400px">
+                    <charts:title text="Leads"/>
+                    <charts:tooltip trigger="ITEM"/>
+                    <charts:series>
+                        <charts:pie>
+                            <charts:label/>
+                        </charts:pie>
+                    </charts:series>
+                </charts:chart>
+
+                <charts:chart id="leadsByTimeChart" width="100%" height="400px">
+                    <charts:tooltip trigger="ITEM"/>
+                    <charts:series>
+                        <charts:bar/>
+                    </charts:series>
+                    <charts:xAxes>
+                        <charts:xAxis/>
+                    </charts:xAxes>
+                    <charts:yAxes>
+                        <charts:yAxis name="Leads"/>
+                    </charts:yAxes>
+                </charts:chart>
+            </vbox>
         </initialLayout>
     </appLayout>
 </mainView>

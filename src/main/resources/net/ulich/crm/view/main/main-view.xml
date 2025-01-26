@@ -37,7 +37,7 @@
         <initialLayout>
             <vbox>
                 <hbox justifyContent="AROUND" width="100%">
-                    <charts:chart id="leadsByStatusChart" width="600px" height="400px">
+                    <charts:chart id="leadsByStatusChart" width="600px" height="300px">
                         <charts:title text="Leads"/>
                         <charts:tooltip trigger="ITEM"/>
                         <charts:series>
@@ -47,7 +47,7 @@
                         </charts:series>
                     </charts:chart>
 
-                    <charts:chart id="leadsByYearChart" width="600px" height="400px">
+                    <charts:chart id="leadsByYearChart" width="600px" height="300px">
                         <charts:tooltip trigger="ITEM"/>
                         <charts:series>
                             <charts:bar/>
@@ -61,7 +61,7 @@
                     </charts:chart>
                 </hbox>
 
-                <charts:chart id="leadsByMonthChart" width="100%" height="400px">
+                <charts:chart id="leadsByMonthChart" width="100%" height="300px">
                     <charts:tooltip trigger="ITEM"/>
                     <charts:series>
                         <charts:bar/>

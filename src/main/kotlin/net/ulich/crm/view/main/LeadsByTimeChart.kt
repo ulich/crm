@@ -1,9 +1,7 @@
 package net.ulich.crm.view.main
 
 import io.jmix.chartsflowui.component.Chart
-import io.jmix.chartsflowui.data.item.MapDataItem
 import io.jmix.chartsflowui.kit.component.model.DataSet
-import io.jmix.chartsflowui.kit.data.chart.ListChartItems
 import io.jmix.core.DataManager
 import java.math.BigDecimal
 import java.time.YearMonth
@@ -14,47 +12,27 @@ class LeadsByTimeChart(val dataManager: DataManager) {
         val rowsFromDb = load()
         val rowsWithZeroCounts = fillZeroMonths(rowsFromDb)
 
-        initByMonthChart(rowsWithZeroCounts, byMonthChart)
-        initByYearChart(rowsWithZeroCounts, byYearChart)
+        byMonthChart.dataSet = toMonthDataSet(rowsWithZeroCounts)
+        byYearChart.dataSet = toYearDataSet(rowsWithZeroCounts)
     }
 
-    private fun initByMonthChart(rows: List<Row>, byMonthChart: Chart) {
-        val months = rows.map {
+    private fun toMonthDataSet(rows: List<Row>): DataSet {
+        val items = rows.map {
             val shortYear = it.year % 100
-            MapDataItem(
-                mapOf(
-                    "yearmonth" to "${it.month}'${shortYear}",
-                    "Anzahl" to it.count,
-                )
-            )
+            ChartDataSetFactory.Item("${it.month}'${shortYear}", it.count)
         }
 
-        byMonthChart.dataSet = DataSet().withSource(
-            DataSet.Source<MapDataItem>()
-                .withDataProvider(ListChartItems(months))
-                .withCategoryField("yearmonth")
-                .withValueFields("Anzahl")
-        )
+        return ChartDataSetFactory.create(items, "Anzahl")
     }
 
-    private fun initByYearChart(rows: List<Row>, byYearChart: Chart) {
+    private fun toYearDataSet(rows: List<Row>): DataSet {
         val rowsByYear = rows.groupBy { it.year }
 
-        val years = rowsByYear.map { (year, rowsOfYear) ->
-            MapDataItem(
-                mapOf(
-                    "year" to "${year}",
-                    "Anzahl" to rowsOfYear.sumOf { it.count },
-                )
-            )
+        val items = rowsByYear.map { (year, rowsOfYear) ->
+            ChartDataSetFactory.Item("$year", rowsOfYear.sumOf { it.count })
         }
 
-        byYearChart.dataSet = DataSet().withSource(
-            DataSet.Source<MapDataItem>()
-                .withDataProvider(ListChartItems(years))
-                .withCategoryField("year")
-                .withValueFields("Anzahl")
-        )
+        return ChartDataSetFactory.create(items, "Anzahl")
     }
 
     private fun load(): List<Row> {

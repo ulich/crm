@@ -8,13 +8,18 @@ import io.jmix.core.DataManager
 import java.math.BigDecimal
 import java.time.YearMonth
 
-class LeadsPerMonthChart(val dataManager: DataManager) {
+class LeadsByTimeChart(val dataManager: DataManager) {
 
-    fun init(leadsByTimeChart: Chart) {
+    fun init(byMonthChart: Chart, byYearChart: Chart) {
         val rowsFromDb = load()
         val rowsWithZeroCounts = fillZeroMonths(rowsFromDb)
 
-        val months = rowsWithZeroCounts.map {
+        initByMonthChart(rowsWithZeroCounts, byMonthChart)
+        initByYearChart(rowsWithZeroCounts, byYearChart)
+    }
+
+    private fun initByMonthChart(rows: List<Row>, byMonthChart: Chart) {
+        val months = rows.map {
             val shortYear = it.year % 100
             MapDataItem(
                 mapOf(
@@ -24,11 +29,31 @@ class LeadsPerMonthChart(val dataManager: DataManager) {
             )
         }
 
-        leadsByTimeChart.dataSet = DataSet().withSource(
+        byMonthChart.dataSet = DataSet().withSource(
             DataSet.Source<MapDataItem>()
                 .withDataProvider(ListChartItems(months))
                 .withCategoryField("yearmonth")
-                .withValueField("Anzahl")
+                .withValueFields("Anzahl")
+        )
+    }
+
+    private fun initByYearChart(rows: List<Row>, byYearChart: Chart) {
+        val rowsByYear = rows.groupBy { it.year }
+
+        val years = rowsByYear.map { (year, rowsOfYear) ->
+            MapDataItem(
+                mapOf(
+                    "year" to "${year}",
+                    "Anzahl" to rowsOfYear.sumOf { it.count },
+                )
+            )
+        }
+
+        byYearChart.dataSet = DataSet().withSource(
+            DataSet.Source<MapDataItem>()
+                .withDataProvider(ListChartItems(years))
+                .withCategoryField("year")
+                .withValueFields("Anzahl")
         )
     }
 

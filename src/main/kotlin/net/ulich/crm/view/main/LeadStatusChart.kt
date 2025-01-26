@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 class LeadStatusChart(val dataManager: DataManager, val messages: Messages) {
 
-    fun init(leadsByStatusChart: Chart) {
+    fun init(chart: Chart) {
         val statistics = dataManager.loadValues("select e.status, count(e) from Lead e group by e.status")
             .properties("status", "count")
             .list()
@@ -23,7 +23,7 @@ class LeadStatusChart(val dataManager: DataManager, val messages: Messages) {
             MapDataItem(mapOf("status" to statusText, "count" to count))
         }
 
-        leadsByStatusChart.dataSet = DataSet().withSource(
+        chart.dataSet = DataSet().withSource(
             DataSet.Source<MapDataItem>()
                 .withDataProvider(ListChartItems(leadStatuses))
                 .withCategoryField("status")

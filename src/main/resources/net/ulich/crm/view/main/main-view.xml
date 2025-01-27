@@ -38,7 +38,17 @@
             <vbox>
                 <hbox justifyContent="AROUND" width="100%">
                     <charts:chart id="leadsByStatusChart" width="500px" height="300px">
-                        <charts:title text="Leads"/>
+                        <charts:title text="msg://leads"/>
+                        <charts:tooltip trigger="ITEM"/>
+                        <charts:series>
+                            <charts:pie>
+                                <charts:label/>
+                            </charts:pie>
+                        </charts:series>
+                    </charts:chart>
+
+                    <charts:chart id="productAddOnsChart" width="500px" height="300px">
+                        <charts:title text="msg://productAddOns"/>
                         <charts:tooltip trigger="ITEM"/>
                         <charts:series>
                             <charts:pie>
@@ -48,6 +58,7 @@
                     </charts:chart>
 
                     <charts:chart id="orderedProductsByYearChart" width="500px" height="300px">
+                        <charts:title text="msg://orderedProductsPerYear"/>
                         <charts:tooltip trigger="ITEM"/>
                         <charts:series>
                             <charts:bar/>
@@ -56,12 +67,13 @@
                             <charts:xAxis/>
                         </charts:xAxes>
                         <charts:yAxes>
-                            <charts:yAxis name="msg://orderedProductsPerYear"/>
+                            <charts:yAxis name="msg://orderedProducts"/>
                         </charts:yAxes>
                     </charts:chart>
                 </hbox>
 
                 <charts:chart id="orderedProductsByMonthChart" width="100%" height="300px">
+                    <charts:title text="msg://orderedProductsPerMonth"/>
                     <charts:tooltip trigger="ITEM"/>
                     <charts:series>
                         <charts:bar/>
@@ -70,7 +82,7 @@
                         <charts:xAxis/>
                     </charts:xAxes>
                     <charts:yAxes>
-                        <charts:yAxis name="msg://orderedProductsPerMonth"/>
+                        <charts:yAxis name="msg://orderedProducts"/>
                     </charts:yAxes>
                 </charts:chart>
             </vbox>

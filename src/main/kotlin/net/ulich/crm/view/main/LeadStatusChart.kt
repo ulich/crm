@@ -10,7 +10,13 @@ import org.springframework.stereotype.Component
 class LeadStatusChart(val dataManager: DataManager, val messages: Messages) {
 
     fun init(chart: Chart) {
-        val statistics = dataManager.loadValues("select e.status, count(e) from Lead e group by e.status")
+        val statistics = dataManager.loadValues(
+            """
+                select e.status, count(e)
+                from Lead e
+                group by e.status
+                order by count(e)"""
+        )
             .properties("status", "count")
             .list()
 

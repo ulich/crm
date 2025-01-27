@@ -79,11 +79,18 @@
                         <charts:bar/>
                     </charts:series>
                     <charts:xAxes>
-                        <charts:xAxis/>
+                        <charts:xAxis alignTicks="true">
+                            <charts:axisLabel interval="2"/>
+                            <charts:axisTick interval="2"/>
+                        </charts:xAxis>
                     </charts:xAxes>
                     <charts:yAxes>
                         <charts:yAxis name="msg://orderedProducts"/>
                     </charts:yAxes>
+                    <charts:dataZoom>
+                        <charts:sliderDataZoom/>
+                        <charts:insideDataZoom/>
+                    </charts:dataZoom>
                 </charts:chart>
             </vbox>
         </initialLayout>

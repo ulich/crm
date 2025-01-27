@@ -12,14 +12,15 @@ class OrderedProductsByTimeChart(val dataManager: DataManager) {
         val rowsFromDb = load()
         val rowsWithZeroCounts = fillZeroMonths(rowsFromDb)
 
-        byMonthChart.dataSet = toMonthDataSet(rowsWithZeroCounts)
         byYearChart.dataSet = toYearDataSet(rowsWithZeroCounts)
+        byMonthChart.dataSet = toMonthDataSet(rowsWithZeroCounts)
+
+        initDataZoom(byMonthChart)
     }
 
     private fun toMonthDataSet(rows: List<Row>): DataSet {
         val items = rows.map {
-            val shortYear = it.year % 100
-            ChartDataSetFactory.Item("${it.month}'${shortYear}", it.count)
+            ChartDataSetFactory.Item(it.toYearMonth().toChartString(), it.count)
         }
 
         return ChartDataSetFactory.create(items, "Anzahl")
@@ -60,16 +61,26 @@ class OrderedProductsByTimeChart(val dataManager: DataManager) {
 
         val sortedRows = rows.sortedBy { it.year * 12 + it.month }
 
-        val startDate = YearMonth.of(sortedRows.first().year, sortedRows.first().month)
+        val firstProductDate = YearMonth.of(sortedRows.first().year, sortedRows.first().month)
+        val startDate = firstProductDate.getStartOfQuarter()
         val endDate = YearMonth.now()
 
-        val completeMonths = generateSequence(startDate) { date ->
+        val allMonths = generateSequence(startDate) { date ->
             if (date < endDate) date.plusMonths(1) else null
         }.toList()
 
         val monthMap = rows.associateBy { it.toYearMonth() }
-        return completeMonths.map { month ->
+        return allMonths.map { month ->
             monthMap[month] ?: Row(month.year, month.monthValue, 0L)
+        }
+    }
+
+    private fun initDataZoom(byMonthChart: Chart) {
+        val start = YearMonth.now().minusYears(2).toChartString()
+        val end = YearMonth.now().toChartString()
+        byMonthChart.dataZoom.forEach {
+            it.startValue = start
+            it.endValue = end
         }
     }
 
@@ -78,4 +89,21 @@ class OrderedProductsByTimeChart(val dataManager: DataManager) {
             return YearMonth.of(year, month)
         }
     }
+
+    fun YearMonth.toChartString(): String {
+        val shortYear = this.year % 100
+        return "${this.monthValue}'${shortYear}"
+    }
+
+    /**
+     * 1 = Q1, 2 = Q2, 3 = Q3, 4 = Q4
+     */
+    fun YearMonth.getQuarterValue(): Int {
+        return (this.monthValue - 1) / 3 + 0
+    }
+
+    fun YearMonth.getStartOfQuarter(): YearMonth {
+        return YearMonth.of(this.year, (this.getQuarterValue() - 1) * 3 + 1)
+    }
+
 }

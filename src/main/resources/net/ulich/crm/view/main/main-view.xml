@@ -36,8 +36,8 @@
         </drawerLayout>
         <initialLayout>
             <vbox>
-                <hbox justifyContent="AROUND" width="100%">
-                    <charts:chart id="leadsByStatusChart" width="470px" height="300px">
+                <hbox width="100%">
+                    <charts:chart id="leadsByStatusChart" width="100%" height="300px">
                         <charts:title text="msg://leads"/>
                         <charts:tooltip trigger="ITEM"/>
                         <charts:series>
@@ -47,7 +47,7 @@
                         </charts:series>
                     </charts:chart>
 
-                    <charts:chart id="productAddOnsChart" width="470px" height="300px">
+                    <charts:chart id="productAddOnsChart" width="100%" height="300px">
                         <charts:title text="msg://productAddOns"/>
                         <charts:tooltip trigger="ITEM"/>
                         <charts:series>
@@ -56,8 +56,10 @@
                             </charts:pie>
                         </charts:series>
                     </charts:chart>
+                </hbox>
 
-                    <charts:chart id="orderedProductsByYearChart" width="470px" height="300px">
+                <hbox expand="orderedProductsByMonthChart" width="100%">
+                    <charts:chart id="orderedProductsByYearChart" width="400px" height="300px">
                         <charts:title text="msg://orderedProductsPerYear"/>
                         <charts:tooltip trigger="ITEM"/>
                         <charts:series>
@@ -70,28 +72,28 @@
                             <charts:yAxis name="msg://orderedProducts"/>
                         </charts:yAxes>
                     </charts:chart>
-                </hbox>
 
-                <charts:chart id="orderedProductsByMonthChart" width="100%" height="300px">
-                    <charts:title text="msg://orderedProductsPerMonth"/>
-                    <charts:tooltip trigger="ITEM"/>
-                    <charts:series>
-                        <charts:bar/>
-                    </charts:series>
-                    <charts:xAxes>
-                        <charts:xAxis alignTicks="true">
-                            <charts:axisLabel interval="2"/>
-                            <charts:axisTick interval="2"/>
-                        </charts:xAxis>
-                    </charts:xAxes>
-                    <charts:yAxes>
-                        <charts:yAxis name="msg://orderedProducts"/>
-                    </charts:yAxes>
-                    <charts:dataZoom>
-                        <charts:sliderDataZoom/>
-                        <charts:insideDataZoom/>
-                    </charts:dataZoom>
-                </charts:chart>
+                    <charts:chart id="orderedProductsByMonthChart" width="100%" height="300px">
+                        <charts:title text="msg://orderedProductsPerMonth"/>
+                        <charts:tooltip trigger="ITEM"/>
+                        <charts:series>
+                            <charts:bar/>
+                        </charts:series>
+                        <charts:xAxes>
+                            <charts:xAxis alignTicks="true">
+                                <charts:axisLabel interval="2"/>
+                                <charts:axisTick interval="2"/>
+                            </charts:xAxis>
+                        </charts:xAxes>
+                        <charts:yAxes>
+                            <charts:yAxis name="msg://orderedProducts"/>
+                        </charts:yAxes>
+                        <charts:dataZoom>
+                            <charts:sliderDataZoom/>
+                            <charts:insideDataZoom/>
+                        </charts:dataZoom>
+                    </charts:chart>
+                </hbox>
             </vbox>
         </initialLayout>
     </appLayout>

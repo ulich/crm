@@ -44,10 +44,10 @@ class CustomersByYearChart(val dataManager: DataManager) {
     private fun loadRows(): List<Row> {
         val rows = dataManager.loadValues(
             """
-                    select extract(year from e.createdDate), count(distinct e)
+                    select extract(year from op.purchaseDate), count(distinct e)
                     from Lead e
                     join e.orderedProducts op
-                    group by extract(year from e.createdDate)"""
+                    group by extract(year from op.purchaseDate)"""
         )
             .properties("year", "count")
             .list()

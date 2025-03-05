@@ -83,7 +83,11 @@ open class RecurringEmail {
     }
 
     fun calculateNextOcurrenceFrom(fromDate: LocalDate): ZonedDateTime {
-        val scheduledSendDate = fromDate.plus(intervalMonths!!.toLong(), ChronoUnit.MONTHS)
+        var scheduledSendDate = fromDate;
+        do {
+            scheduledSendDate = scheduledSendDate.plus(intervalMonths!!.toLong(), ChronoUnit.MONTHS)
+        } while (scheduledSendDate < LocalDate.now());
+
         return ZonedDateTime.of(scheduledSendDate, getLocalTime(), BERLIN)
     }
 }

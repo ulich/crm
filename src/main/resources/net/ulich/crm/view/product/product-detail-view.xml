@@ -18,7 +18,8 @@
     </actions>
     <layout>
         <formLayout id="form" dataContainer="productsDc">
-            <textField id="nameField" property="name" colspan="2"/>
+            <textField id="nameField" property="name"/>
+            <checkbox id="isAddOnField" property="isAddOn"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>

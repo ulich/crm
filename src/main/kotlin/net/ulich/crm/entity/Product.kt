@@ -28,6 +28,10 @@ open class Product {
     @NotNull
     var name: String? = null
 
+    @Column(name = "IS_ADDON", nullable = false)
+    @NotNull
+    var isAddOn: Boolean? = false
+
     @Column(name = "VERSION", nullable = false)
     @Version
     var version: Int? = null

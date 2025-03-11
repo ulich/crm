@@ -47,6 +47,7 @@
             </actions>
             <columns resizable="true">
                 <column property="name"/>
+                <column property="isAddOn"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

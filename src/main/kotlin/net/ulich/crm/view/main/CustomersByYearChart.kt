@@ -47,6 +47,7 @@ class CustomersByYearChart(val dataManager: DataManager) {
                     select extract(year from op.purchaseDate), count(distinct e)
                     from Lead e
                     join e.orderedProducts op
+                    where op.product.isAddOn = false
                     group by extract(year from op.purchaseDate)"""
         )
             .properties("year", "count")

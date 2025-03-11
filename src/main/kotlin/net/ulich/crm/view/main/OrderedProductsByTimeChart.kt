@@ -41,6 +41,7 @@ class OrderedProductsByTimeChart(val dataManager: DataManager) {
             """
                 select extract(year from e.purchaseDate), extract(month from e.purchaseDate), count(e)
                 from OrderedProduct e
+                where e.product.isAddOn = false
                 group by extract(year from e.purchaseDate), extract(month from e.purchaseDate)"""
         )
             .properties("year", "month", "count")

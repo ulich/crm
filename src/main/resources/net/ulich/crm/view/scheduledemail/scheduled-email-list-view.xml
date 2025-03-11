@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://scheduledEmailListView.title"
+      focusComponent="scheduledEmailsDataGrid">
+    <data>
+        <collection id="scheduledEmailsDc"
+                    class="net.ulich.crm.entity.ScheduledEmail">
+            <fetchPlan extends="_base">
+                <property name="lead" fetchPlan="_base"/>
+                <property name="emailTemplate" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="scheduledEmailsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ScheduledEmail e
+                    where e.recurringEmail is not null
+                    and e.plannedSendDate > current_date
+                    order by e.plannedSendDate asc]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <simplePagination id="pagination" dataLoader="scheduledEmailsDl"/>
+        </hbox>
+        <dataGrid id="scheduledEmailsDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="scheduledEmailsDc"
+                  columnReorderingAllowed="true">
+            <actions>
+            </actions>
+            <columns resizable="true">
+                <column property="plannedSendDate"/>
+                <column property="emailTemplate.name"/>
+                <column property="lead"/>
+                <column property="sentDate"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectBtn" action="selectAction"/>
+            <button id="discardBtn" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

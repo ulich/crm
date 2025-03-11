@@ -2,6 +2,7 @@
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
 
     <item view="Lead.list" title="msg://net.ulich.crm.view.lead/leadListView.title"/>
+    <item view="ScheduledEmail.list" title="msg://net.ulich.crm.view.scheduledemail/scheduledEmailListView.title"/>
     <item view="EmailTemplate.list" title="msg://net.ulich.crm.view.emailtemplate/emailTemplateListView.title"/>
     <item view="EmailSignature.list" title="msg://net.ulich.crm.view.emailsignature/emailSignatureListView.title"/>
     <item view="Campaign.list" title="msg://net.ulich.crm.view.campaign/campaignListView.title"/>

@@ -56,6 +56,10 @@ open class ScheduledEmail {
     @ManyToOne(fetch = FetchType.LAZY)
     var recurringEmail: RecurringEmail? = null
 
+    @Column(name = "IS_COMPLETE", nullable = false)
+    @NotNull
+    var isComplete: Boolean? = false
+
     @Column(name = "VERSION", nullable = false)
     @Version
     var version: Int? = null

@@ -13,8 +13,9 @@
                 <query>
                     <![CDATA[select e from ScheduledEmail e
                     where e.recurringEmail is not null
-                    and e.plannedSendDate > current_date
-                    order by e.plannedSendDate asc]]>
+                    and e.sentDate < current_date
+                    and e.isComplete = false
+                    order by e.sentDate asc]]>
                 </query>
             </loader>
         </collection>
@@ -41,10 +42,10 @@
             <actions>
             </actions>
             <columns resizable="true">
-                <column property="plannedSendDate"/>
-                <column property="emailTemplate.name"/>
-                <column property="lead"/>
-                <column property="sentDate"/>
+                <column property="sentDate" width="150px" flexGrow="0"/>
+                <column property="lead" flexGrow="1"/>
+                <column property="emailTemplate.name" flexGrow="1"/>
+                <column key="complete" width="60px" flexGrow="0"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

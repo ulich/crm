@@ -123,6 +123,7 @@
                     <column property="emailTemplate.name"/>
                     <column property="recurringEmail.intervalMonths"/>
                     <column property="sentDate"/>
+                    <column property="isComplete"/>
                 </columns>
             </dataGrid>
         </vbox>

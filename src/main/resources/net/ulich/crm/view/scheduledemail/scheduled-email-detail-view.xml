@@ -18,6 +18,7 @@
     <layout>
         <formLayout id="form" dataContainer="scheduledEmailDc">
             <dateTimePicker id="plannedSendDateField" property="plannedSendDate"/>
+            <checkbox id="isCompleteField" property="isComplete"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>

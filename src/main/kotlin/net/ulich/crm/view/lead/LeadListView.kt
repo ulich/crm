@@ -112,6 +112,7 @@ class LeadListView : StandardListView<Lead>() {
                     .withField {
                         Checkbox().apply {
                             label = messages.getMessage(LeadDetailView::class.java, "sendToAllLabel")
+                            value = true
                         }
                     }
                     .withDefaultValue(true)

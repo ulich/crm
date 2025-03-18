@@ -13,6 +13,7 @@
                     <property name="product" fetch="JOIN" fetchPlan="_base"/>
                     <property name="productAddOns" fetch="JOIN" fetchPlan="_base"/>
                 </property>
+                <property name="tags" fetchPlan="_base"/>
             </fetchPlan>
             <loader/>
             <collection id="scheduledEmailsDc" property="scheduledEmails"/>
@@ -27,6 +28,14 @@
                 </query>
             </loader>
         </collection>
+        <collection class="net.ulich.crm.entity.Tag" id="tagsDc">
+            <fetchPlan extends="_base"/>
+            <loader id="tagsDl">
+                <query>
+                    <![CDATA[select e from Tag e order by e.name]]>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -38,38 +47,51 @@
     <layout>
         <vbox>
             <formLayout dataContainer="leadDc">
-                <select id="statusField" property="status"/>
-                <entityComboBox id="campaignField" property="campaign" itemsContainer="campaignsDc"/>
+                <formLayout colspan="2">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="50em" columns="3"/>
+                    </responsiveSteps>
+                    <select id="statusField" property="status"/>
+                    <multiSelectComboBox id="productAddOnsField" property="tags" itemsContainer="tagsDc"/>
+                    <entityComboBox id="campaignField" property="campaign" itemsContainer="campaignsDc"/>
+                </formLayout>
                 <textField id="companyNameField" property="companyName"/>
                 <textField id="postCodeField" property="postCode"/>
                 <textField id="streetField" property="street"/>
                 <textField id="cityField" property="city"/>
             </formLayout>
-
             <div height="20px"/>
             <h3 text="msg://contact"/>
             <formLayout dataContainer="leadDc">
-                <emailField id="emailField" property="email"/>
-                <select id="genderField" property="gender"/>
-                <textField id="firstNameField" property="firstName"/>
-                <textField id="lastNameField" property="lastName"/>
-                <hbox width="100%" alignItems="END">
-                    <textField id="phoneNumberField" property="phoneNumber" width="100%"
-                               label="msg://net.ulich.crm.entity/Lead.phoneNumber"/>
-                    <button id="callButton" icon="vaadin:phone"/>
-                </hbox>
-                <hbox width="100%" alignItems="END">
-                    <textField id="alternativePhoneNumber" property="alternativePhoneNumber" width="100%"
-                               label="msg://net.ulich.crm.entity/Lead.alternativePhoneNumber"/>
-                    <button id="callAltNumberButton" icon="vaadin:phone"/>
-                </hbox>
+                <formLayout colspan="2">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="50em" columns="3"/>
+                    </responsiveSteps>
+                    <select id="genderField" property="gender"/>
+                    <textField id="firstNameField" property="firstName"/>
+                    <textField id="lastNameField" property="lastName"/>
+                </formLayout>
+                <formLayout colspan="2">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="50em" columns="3"/>
+                    </responsiveSteps>
+                    <emailField id="emailField" property="email"/>
+                    <hbox width="100%" alignItems="END">
+                        <textField id="phoneNumberField" property="phoneNumber" width="100%"
+                                   label="msg://net.ulich.crm.entity/Lead.phoneNumber"/>
+                        <button id="callButton" icon="vaadin:phone"/>
+                    </hbox>
+                    <hbox width="100%" alignItems="END">
+                        <textField id="alternativePhoneNumber" property="alternativePhoneNumber" width="100%"
+                                   label="msg://net.ulich.crm.entity/Lead.alternativePhoneNumber"/>
+                        <button id="callAltNumberButton" icon="vaadin:phone"/>
+                    </hbox>
+                </formLayout>
             </formLayout>
-
             <div height="20px"/>
             <formLayout dataContainer="leadDc">
                 <textArea id="notesField" property="notes" label="msg://notes" height="200px" colspan="2"/>
             </formLayout>
-
             <div height="20px"/>
             <h3 text="msg://orderedProducts"/>
             <hbox id="buttonsPanel" classNames="buttons-panel">
@@ -102,7 +124,6 @@
                     <column property="termEndDate"/>
                 </columns>
             </dataGrid>
-
             <div height="20px"/>
             <h3 text="msg://emails"/>
             <hbox classNames="buttons-panel">

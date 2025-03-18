@@ -1,8 +1,10 @@
 package net.ulich.crm.entity
 
+import io.jmix.core.DeletePolicy
 import io.jmix.core.annotation.DeletedBy
 import io.jmix.core.annotation.DeletedDate
 import io.jmix.core.entity.annotation.JmixGeneratedValue
+import io.jmix.core.entity.annotation.OnDeleteInverse
 import io.jmix.core.metamodel.annotation.Composition
 import io.jmix.core.metamodel.annotation.InstanceName
 import io.jmix.core.metamodel.annotation.JmixEntity
@@ -82,6 +84,15 @@ open class Lead {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     var campaign: Campaign? = null
+
+    @OnDeleteInverse(DeletePolicy.DENY)
+    @JoinTable(
+        name = "LEAD_TAGS",
+        joinColumns = [JoinColumn(name = "LEAD_ID")],
+        inverseJoinColumns = [JoinColumn(name = "TAG_ID")]
+    )
+    @ManyToMany
+    var tags: List<Tag> = ArrayList()
 
     @Column(name = "VERSION", nullable = false)
     @Version

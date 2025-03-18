@@ -7,6 +7,7 @@
                     class="net.ulich.crm.entity.Lead">
             <fetchPlan extends="_base">
                 <property name="campaign" fetch="JOIN" fetchPlan="_base"/>
+                <property name="tags" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="leadsDl" readOnly="true">
                 <query>
@@ -132,6 +133,7 @@
                 <column property="companyName"/>
                 <column property="lastName"/>
                 <column property="status"/>
+                <column property="tags"/>
                 <column property="campaign"/>
                 <column property="createdDate"/>
             </columns>

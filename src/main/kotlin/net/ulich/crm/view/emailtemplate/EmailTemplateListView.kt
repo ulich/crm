@@ -53,7 +53,7 @@ class EmailTemplateListView : StandardListView<EmailTemplate>() {
             .withParameters(
                 InputParameter.stringParameter("csv")
                     .withField(::textArea)
-                    .withLabel(messageBundle.getMessage("csvLabel"))
+                    .withLabel(messageBundle.getMessage("recipientsCsvLabel"))
             )
             .withActions(DialogActions.OK_CANCEL)
             .withCloseListener(::bulkSendDialogClosed)
@@ -68,7 +68,7 @@ class EmailTemplateListView : StandardListView<EmailTemplate>() {
         val csv = event.getValue<String>("csv")
         val records = recipientCsvParser.parse(csv!!)
         if (records == null) {
-            notifications.create(messageBundle.getMessage("csvImportFailed"))
+            notifications.create(messageBundle.getMessage("bulkSendFailed"))
                 .withType(Notifications.Type.ERROR)
                 .show()
             return

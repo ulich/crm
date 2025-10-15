@@ -10,10 +10,10 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 
 @Suppress("JmixIncorrectCreateEntity")
-class LeadCsvImporterTest {
+class LeadImporterTest {
 
     val dataManager = mock(DataManager::class.java)
-    val importer = LeadCsvImporter(dataManager)
+    val importer = LeadImporter(dataManager)
 
     @BeforeEach
     fun setUp() {
@@ -22,7 +22,7 @@ class LeadCsvImporterTest {
 
     @Test
     fun testImportFromTabCsv() {
-        val lead = importer.importFromCsv(
+        val lead = importer.importLead(
             """
             Anfrage gestellt	ID	Firma	Anrede	Vorname	Nachname	Straße	PLZ	Stadt	Land	E-Mail	Rufnummer	Alternative Rufnummer	Mobil	Einsatzort	Anzahl Personen	Kommentar
             12.03.2024 09:18	136353	Some Company GmbH	Herr	Max	Mustermann	Hauptstraße 1	12345	Berlin	DE	max.muster@gmbh.de	+49 123 456789	+49 987 654321	+49 174 12345	Ladenlokal	100+	Allgemeine Rufnummer: 0333 132321""".trimIndent()
@@ -54,7 +54,7 @@ class LeadCsvImporterTest {
 
     @Test
     fun testImportFromSemicolonCsv() {
-        val lead = importer.importFromCsv(
+        val lead = importer.importLead(
             """
             "Anfrage gestellt";ID;Firma;Vorname;Nachname;Straße;PLZ;Stadt;Land;E-Mail;Telefon;Einsatzort;"Anzahl Personen";Kommentar
             "12.03.2024 09:18";136353;"Some Company GmbH";Max;Mustermann;"Hauptstraße 1";12345;Berlin;DE;max.muster@gmbh.de;"+49 123 456789";Ladenlokal;30-50;"Allgemeine Rufnummer: 0333 132321"
@@ -86,7 +86,7 @@ class LeadCsvImporterTest {
 
     @Test
     fun testImportWithSanitizing() {
-        val lead = importer.importFromCsv(
+        val lead = importer.importLead(
             """
             "Anfrage gestellt";ID;Firma
             "12.03.2024 09:18";136353;"Some	Com		pany 	 GmbH "
@@ -95,5 +95,46 @@ class LeadCsvImporterTest {
 
         assertThat(lead).isNotNull()
         assertThat(lead?.companyName).isEqualTo("Some Com pany GmbH")
+    }
+
+    @Test
+    fun testImportFromLabelValuePairs() {
+        val lead = importer.importLead(
+            """
+            Firma: Test company
+            E-Mail: test@example.com
+            Straße/Nr.: Teststr. 123
+            PLZ: 123456
+            Ort: Testcity
+            Anrede: Herr
+            Vorname: Testfirstname
+            Name: Testname
+            Telefon: 0123456789
+            Einsatzort : Büro & Unternehmen
+            Anzahl Personen: 1
+            Kommentar: Some long comment with : and with
+            newlines
+            """.trimIndent()
+        )
+
+        assertThat(lead).isNotNull()
+        assertThat(lead?.getGender()).isEqualTo(Gender.MR)
+        assertThat(lead?.companyName).isEqualTo("Test company")
+        assertThat(lead?.firstName).isEqualTo("Testfirstname")
+        assertThat(lead?.lastName).isEqualTo("Testname")
+        assertThat(lead?.street).isEqualTo("Teststr. 123")
+        assertThat(lead?.postCode).isEqualTo("123456")
+        assertThat(lead?.city).isEqualTo("Testcity")
+        assertThat(lead?.email).isEqualTo("test@example.com")
+        assertThat(lead?.phoneNumber).isEqualTo("0123456789")
+        assertThat(lead?.alternativePhoneNumber).isNull()
+        assertThat(lead?.notes).isEqualTo(
+            """
+                Einsatzort: Büro & Unternehmen
+                Anzahl Personen: 1
+                Kommentar: Some long comment with : and with
+                newlines
+                """.trimIndent()
+        )
     }
 }

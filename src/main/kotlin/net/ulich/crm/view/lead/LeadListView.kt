@@ -19,7 +19,7 @@ import io.jmix.flowui.model.CollectionLoader
 import io.jmix.flowui.view.*
 import net.ulich.crm.entity.EmailTemplate
 import net.ulich.crm.entity.Lead
-import net.ulich.crm.lead.LeadCsvImporter
+import net.ulich.crm.lead.LeadImporter
 import net.ulich.crm.scheduler.LeadEmailService
 import net.ulich.crm.view.main.MainView
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,7 +46,7 @@ class LeadListView : StandardListView<Lead>() {
     private lateinit var messages: Messages
 
     @Autowired
-    private lateinit var leadCsvImporter: LeadCsvImporter
+    private lateinit var leadImporter: LeadImporter
 
     @Autowired
     private lateinit var notifications: Notifications
@@ -57,15 +57,15 @@ class LeadListView : StandardListView<Lead>() {
     @Autowired
     private lateinit var leadEmailService: LeadEmailService
 
-    @Subscribe("leadsDataGrid.createFromCsv")
-    private fun onLeadsDataGridCreateFromCsv(event: ActionPerformedEvent) {
+    @Subscribe("leadsDataGrid.importLead")
+    private fun onLeadsDataGridimportLead(event: ActionPerformedEvent) {
         dialogs.createInputDialog(this)
-            .withHeader(messages.getMessage(this.javaClass, "createFromCsvHeader"))
+            .withHeader(messages.getMessage(this.javaClass, "importLeadHeader"))
             .withLabelsPosition(Dialogs.InputDialogBuilder.LabelsPosition.TOP)
             .withParameters(
-                InputParameter.stringParameter("csv")
+                InputParameter.stringParameter("content")
                     .withField(::textArea)
-                    .withLabel(messages.getMessage(this.javaClass, "csvLabel"))
+                    .withLabel(messages.getMessage(this.javaClass, "importLeadLabel"))
             )
             .withActions(DialogActions.OK_CANCEL)
             .withCloseListener(::csvDialogClosed)
@@ -77,10 +77,10 @@ class LeadListView : StandardListView<Lead>() {
             return
         }
 
-        val csv = event.getValue<String>("csv")
-        val lead = leadCsvImporter.importFromCsv(csv!!)
+        val content = event.getValue<String>("content")
+        val lead = leadImporter.importLead(content!!)
         if (lead == null) {
-            notifications.create(messages.getMessage(this.javaClass, "csvImportFailed"))
+            notifications.create(messages.getMessage(this.javaClass, "importLeadFailed"))
                 .withType(Notifications.Type.ERROR)
                 .show()
             return

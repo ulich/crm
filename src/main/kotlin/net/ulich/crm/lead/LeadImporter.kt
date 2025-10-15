@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component
 import java.io.StringReader
 
 @Component
-class LeadCsvImporter(private val dataManager: DataManager) {
+class LeadImporter(private val dataManager: DataManager) {
 
-    fun importFromCsv(csv: String): Lead? {
+    fun importLead(text: String): Lead? {
         val csvParsers = listOf(
             csvParser(';'),
             csvParser('\t'),
@@ -20,16 +20,16 @@ class LeadCsvImporter(private val dataManager: DataManager) {
         )
 
         for (parser in csvParsers) {
-            val lead = parse(csv, parser)
+            val lead = parseCsv(text, parser)
             if (lead != null) {
                 return lead
             }
         }
 
-        return null
+        return parseLabelValuePairs(text)
     }
 
-    private fun parse(csv: String, parser: CSVParser): Lead? {
+    private fun parseCsv(csv: String, parser: CSVParser): Lead? {
         val lines = CSVReaderBuilder(StringReader(csv))
             .withCSVParser(parser)
             .build()
@@ -48,22 +48,47 @@ class LeadCsvImporter(private val dataManager: DataManager) {
 
         val data = header.zip(dataRow).toMap().toMutableMap()
 
+        return createLeadFromMap(data)
+    }
+
+    private fun parseLabelValuePairs(text: String): Lead? {
+        val data = mutableMapOf<String, String>()
+
+        text.lines().forEach { line ->
+            val parts = line.split(":", limit = 2)
+            val key = sanitize(parts[0])
+            if (parts.size == 2) {
+                val value = sanitize(parts[1])
+                data[key] = value
+            } else {
+                data[key] = ""
+            }
+        }
+
+        if (data.isEmpty()) {
+            return null
+        }
+
+        return createLeadFromMap(data)
+    }
+
+    private fun createLeadFromMap(data: MutableMap<String, String>): Lead {
         return dataManager.create(Lead::class.java).apply {
             setGender(toGender(data))
             companyName = data.remove("Firma")
             firstName = data.remove("Vorname")
-            lastName = data.remove("Nachname")
-            street = data.remove("Straße")
+            lastName = data.remove("Name") ?: data.remove("Nachname")
+            street = data.remove("Straße/Nr.") ?: data.remove("Straße")
             postCode = data.remove("PLZ")
-            city = data.remove("Stadt")
+            city = data.remove("Ort") ?: data.remove("Stadt")
             email = data.remove("E-Mail")
-            phoneNumber =
-                data.remove("Telefon") ?: data.remove("Rufnummer") ?: data.remove("Mobil") ?: data.remove("Handy")
-                        ?: data.remove("Mobiltelefon")
-            alternativePhoneNumber =
-                data.remove("Alternative Rufnummer") ?: data.remove("Mobil") ?: data.remove("Handy")
-                        ?: data.remove("Mobiltelefon")
-            notes = data.map { "${it.key}: ${it.value}" }.joinToString("\n")
+            phoneNumber = data.remove("Telefon") ?: data.remove("Rufnummer") ?: data.remove("Mobil")
+                    ?: data.remove("Handy") ?: data.remove("Mobiltelefon")
+            alternativePhoneNumber = data.remove("Alternative Rufnummer") ?: data.remove("Mobil")
+                    ?: data.remove("Handy") ?: data.remove("Mobiltelefon")
+            notes = data.map {
+                if (it.value != "") "${it.key}: ${it.value}" else it.key
+            }.joinToString("\n")
         }
     }
 

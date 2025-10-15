@@ -109,7 +109,7 @@
         </details>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button id="createBtn" action="leadsDataGrid.create"/>
-            <button id="createFromCsvBtn" action="leadsDataGrid.createFromCsv"/>
+            <button id="importLeadBtn" action="leadsDataGrid.importLead"/>
             <button id="editBtn" action="leadsDataGrid.edit"/>
             <button id="removeBtn" action="leadsDataGrid.remove"/>
             <button id="sendMailBtn" action="leadsDataGrid.sendMail"/>
@@ -123,7 +123,7 @@
                   selectionMode="MULTI">
             <actions>
                 <action id="create" type="list_create"/>
-                <action id="createFromCsv" text="msg://createFromCsv" icon="lumo:plus"/>
+                <action id="importLead" text="msg://importLead" icon="lumo:plus"/>
                 <action id="edit" type="list_edit"/>
                 <action id="remove" type="list_remove"/>
                 <action id="sendMail" text="msg://sendMail" icon="vaadin:envelope" type="list_itemTracking"/>

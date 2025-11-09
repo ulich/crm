@@ -33,7 +33,7 @@ class Scheduler(
                     .add("emailTemplate.attachments", FetchPlan.BASE)
             }
             .parameter("now", OffsetDateTime.now())
-            .maxResults(2)
+            .maxResults(1)
             .list()
 
         emailsToBeSent.forEach(::handleEmail)

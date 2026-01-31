@@ -27,7 +27,7 @@ open class EmailAttachment {
     @Id
     var id: UUID? = null
 
-    @Column(name = "FILE_")
+    @Column(name = "FILE_", nullable = false)
     @Lob
     var file: FileRef? = null
 

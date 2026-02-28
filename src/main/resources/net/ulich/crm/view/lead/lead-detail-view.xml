@@ -76,6 +76,7 @@
                         <responsiveStep minWidth="50em" columns="3"/>
                     </responsiveSteps>
                     <emailField id="emailField" property="email"/>
+                    <textField id="emailCcField" property="emailCc"/>
                     <hbox width="100%" alignItems="END">
                         <textField id="phoneNumberField" property="phoneNumber" width="100%"
                                    label="msg://net.ulich.crm.entity/Lead.phoneNumber"/>

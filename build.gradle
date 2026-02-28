@@ -1,6 +1,5 @@
 plugins {
     id 'io.jmix' version '2.3.1'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     id 'java'
 }
 
@@ -14,6 +13,12 @@ jmix {
 group = 'net.uich'
 version = '0.0.1-SNAPSHOT'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 repositories {
     mavenCentral()
     maven {
@@ -22,6 +27,9 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
     implementation 'io.jmix.core:jmix-core-starter'
     implementation 'io.jmix.pessimisticlock:jmix-pessimisticlock-starter'
     implementation 'io.jmix.pessimisticlock:jmix-pessimisticlock-flowui-starter'
@@ -45,6 +53,8 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
     testImplementation 'io.jmix.flowui:jmix-flowui-test-assist'
     implementation 'org.postgresql:postgresql'
 

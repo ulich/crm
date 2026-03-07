@@ -32,6 +32,7 @@ class LeadEmailService(
         )
         emailService.sendPersonalizedEmail(
             toAddress,
+            lead.emailCc,
             subject,
             body,
             signature?.content,

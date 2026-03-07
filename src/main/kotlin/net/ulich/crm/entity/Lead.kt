@@ -47,6 +47,9 @@ open class Lead {
     @NotNull
     var email: String? = null
 
+    @Column(name = "EMAIL_CC", length = 512)
+    var emailCc: String? = null
+
     @Column(name = "PHONE_NUMBER")
     var phoneNumber: String? = null
 

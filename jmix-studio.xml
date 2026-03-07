@@ -20,19 +20,6 @@
           </option>
         </ModuleSettings>
       </entry>
-      <entry key="crm.main">
-        <ModuleSettings>
-          <option name="dataStoreOptionsV2">
-            <map>
-              <entry key="main">
-                <value>
-                  <DataStoreSettingsV2 />
-                </value>
-              </entry>
-            </map>
-          </option>
-        </ModuleSettings>
-      </entry>
       <entry key="net.ulich.crm.main">
         <ModuleSettings>
           <option name="dataStoreOptionsV2">
@@ -54,6 +41,7 @@
     </moduleSettings>
   </component>
   <component name="JmixPluginProjectSettings">
+    <option name="suppressSPNotification" value="true"/>
     <option name="savedDbProperties">
       <list>
         <SavedDbProperties>

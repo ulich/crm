@@ -23,6 +23,7 @@ class EmailService(
 
     fun sendPersonalizedEmail(
         toAddress: String,
+        ccAddress: String?,
         subject: String,
         body: String,
         signature: String?,
@@ -32,22 +33,26 @@ class EmailService(
         val finalBody = body.replace("{{salutation}}", personalization.salutation) + signature.orEmpty()
         val attachmentFiles = prepareAttachments(attachments, personalization)
 
-        sendEmail(toAddress, subject, finalBody, attachmentFiles)
+        sendEmail(toAddress, ccAddress, subject, finalBody, attachmentFiles)
     }
 
     fun sendEmail(
         toAddress: String,
+        ccAddress: String?,
         subject: String,
         body: String,
         attachments: List<FileRef>
     ) {
 
-        emailer.sendEmailAsync(
-            EmailInfoBuilder.create(toAddress, subject, EmailHtmlEncoder.encode(body))
-                .setBodyContentType("text/html")
-                .setAttachments(attachments.map(::toJmixAttachment))
-                .build()
-        )
+        val emailBuilder = EmailInfoBuilder.create(toAddress, subject, EmailHtmlEncoder.encode(body))
+            .setBodyContentType("text/html")
+            .setAttachments(attachments.map(::toJmixAttachment))
+
+        if (!ccAddress.isNullOrBlank()) {
+            emailBuilder.setCc(ccAddress);
+        }
+
+        emailer.sendEmailAsync(emailBuilder.build())
     }
 
     private fun prepareAttachments(

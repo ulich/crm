@@ -29,3 +29,5 @@ vite.generated.ts
 webpack.generated.js
 
 .DS_Store
+
+application-secrets.properties

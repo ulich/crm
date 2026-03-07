@@ -91,6 +91,7 @@ class EmailTemplateListView : StandardListView<EmailTemplate>() {
 
         emailService.sendPersonalizedEmail(
             recipient.email,
+            null,
             email.subject!!,
             email.content!!,
             email.signature?.content,

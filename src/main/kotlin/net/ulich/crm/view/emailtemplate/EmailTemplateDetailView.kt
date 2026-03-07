@@ -103,6 +103,7 @@ class EmailTemplateDetailView : StandardDetailView<EmailTemplate>() {
     private fun sendMail(toAddress: String) {
         emailService.sendPersonalizedEmail(
             toAddress,
+            null,
             editedEntity.subject!!,
             editedEntity.content!!,
             editedEntity.signature?.content,
